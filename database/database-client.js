@@ -17,7 +17,7 @@ export class DatabaseClient {
     const result = await this.client.graphql
       .get()
       .withClassName(className)
-      .withFields('title content type')
+      .withFields('title content type alt')
       .withWhere({
         operator: 'Equal',
         path: [
@@ -35,8 +35,8 @@ export class DatabaseClient {
     // console.log('got result', [title, result.data.Get.Content[0]]);
     return result?.data?.Get?.Content?.[0];
   }
-  async setByName(className, title, content) {
-    const _formatData = (title, content) => {
+  async setByName(className, title, content, alt) {
+    const _formatData = (title, content, alt) => {
       if (typeof content === 'string') {
         const match = title.match(/^([^\/]+)\/[\s\S]*/);
         if (match) {
@@ -53,6 +53,7 @@ export class DatabaseClient {
               title,
               content,
               type,
+              alt,
             },
           };
         } else {
@@ -78,7 +79,7 @@ export class DatabaseClient {
       return ok;
     };
 
-    const data = _formatData(title, content);
+    const data = _formatData(title, content, alt);
     if (!data) {
       throw new Error('invalid data');
     }
