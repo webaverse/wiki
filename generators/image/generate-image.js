@@ -1,4 +1,27 @@
 import {stableDiffusionUrl} from '../../constants/endpoints.js';
+const AdmZip = require("adm-zip");
+
+export const generateImageMass = ({
+  modelName,
+  prefix,
+  suffix,
+  n,
+}) => async ({
+  name,
+  description,
+} = {}) => {
+  const s = `${prefix} ${description} ${suffix}`;
+  const u = `${stableDiffusionUrl}/image_mass?s=${s}&model=${modelName}&n_samples=${n}`;
+  const res = await fetch(u);
+  if(res.ok) {
+    const zip = new AdmZip(res);
+    for (entry in zip.getEntries()) {
+      yield zip.readFile(entry);
+    }
+  } else {
+    throw new Error(`invalid status: ${res.status}`);
+  }
+};
 
 export const generateImage = ({
   modelName,
@@ -9,7 +32,7 @@ export const generateImage = ({
   description,
 } = {}) => {
   const s = `${prefix} ${description} ${suffix}`;
-  const u = `${stableDiffusionUrl}/image_mass?s=${s}&model=${modelName}&n_samples=4&n_rows=2`;
+  const u = `${stableDiffusionUrl}/image?s=${s}&model=${modelName}`;
   const res = await fetch(u);
   if (res.ok) {
     const arrayBuffer = await res.arrayBuffer();
