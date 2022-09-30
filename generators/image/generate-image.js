@@ -1,7 +1,7 @@
 import {stableDiffusionUrl} from '../../constants/endpoints.js';
-const AdmZip = require("adm-zip");
+/*const AdmZip = require("adm-zip");
 
-export const generateImageMass = ({
+  export const generateImageMass = ({
   modelName,
   prefix,
   suffix,
@@ -16,13 +16,14 @@ export const generateImageMass = ({
   if(res.ok) {
     const zip = new AdmZip(res);
     for (entry in zip.getEntries()) {
+      console.log(entry.to_string());
       yield zip.readFile(entry);
     }
   } else {
     throw new Error(`invalid status: ${res.status}`);
   }
 };
-
+*/
 export const generateImage = ({
   modelName,
   prefix,

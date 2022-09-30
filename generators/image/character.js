@@ -3,12 +3,13 @@ import {generateImageMass} from './generate-image.js';
 
 export const generateCharacterImage = generateImage({
   modelName: 'webaverse_characters',
-  prefix: `full body portrait of`,
-  suffix: `anime character design, trending on ArtStation`,
+  prefix: ``,
+  suffix: `anime character concept art, single character, highly detailed, trending on ArtStation`,
 });
-
+/*
 export const generateCharacterGallery = generateImageMass({
   modelName: 'webaverse_characters',
   prefix: `full body portrait of`,
   suffix: `anime character design, trending on ArtStation`,
 })
+*/

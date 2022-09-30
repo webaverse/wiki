@@ -46,13 +46,16 @@ CharacterImage.getInitialProps = async ctx => {
         imgUrl,
       };
     } else {
+      console.log(characterTitle);
       const characterQuery = await c.databaseClient.getByName('Content', characterTitle);
       if (characterQuery) {
         let {
-          alt: desc,
+          content: desc,
         } = characterQuery;
+        const descriptionLines = desc.split(/\n+/);
+        desc = descriptionLines[3];
 
-        desc = desc.replace(/^[\s\S]*?\n[\s\S]*?\n/, ''); // skip name, class
+        //desc = desc.replace(/^[\s\S]*?\n[\s\S]*?\n/, ''); // skip name, class
         console.log('generate character image for', {desc});
 
         let imgArrayBuffer = await generateCharacterImage({
