@@ -3,11 +3,11 @@
 
 import {Ctx} from '../../../../../context.js';
 import {cleanName} from '../../../../../utils.js';
-import {generateSettingImage} from '../../../../../generators/image/setting.js';
+import {generateItemImage} from '../../../../../generators/image/item.js';
 import {ensureUrl} from '../../../../../utils.js';
 
-const SettingImage = async (req, res) => {
-  const props = await SettingImage.getInitialProps({req});
+const ItemImage = async (req, res) => {
+  const props = await ItemImage.getInitialProps({req});
   if (props) {
     const {
       imgUrl,
@@ -17,20 +17,20 @@ const SettingImage = async (req, res) => {
     res.send(404);
   }
 };
-SettingImage.getInitialProps = async ctx => {
+ItemImage.getInitialProps = async ctx => {
   const {req} = ctx;
   
-  const match = req.url.match(/^\/api\/settings\/([^\/]*)\/images\/([^\/]*\.png)$/);
+  const match = req.url.match(/^\/api\/items\/([^\/]*)\/images\/([^\/]*\.png)$/);
   if (match) {
-    let settingName = match[1];
-    settingName = decodeURIComponent(settingName);
-    settingName = cleanName(settingName);
+    let itemName = match[1];
+    itemName = decodeURIComponent(itemName);
+    itemName = cleanName(itemName);
     let imageName = match[2];
     imageName = decodeURIComponent(imageName);
     imageName = cleanName(imageName);
 
-    const settingTitle = `settings/${settingName}`;
-    const imageTitle = `settings/${settingName}/images/${imageName}`;
+    const itemTitle = `items/${itemName}`;
+    const imageTitle = `items/${itemName}/images/${imageName}`;
 
     const c = new Ctx();
     // const id = uuidByString(imageTitle);
@@ -45,18 +45,18 @@ SettingImage.getInitialProps = async ctx => {
         imgUrl,
       };
     } else {
-      const settingQuery = await c.databaseClient.getByName('Content', settingTitle);
-      if (settingQuery) {
+      const itemQuery = await c.databaseClient.getByName('Content', itemTitle);
+      if (itemQuery) {
         let {
           content: description,
-        } = settingQuery;
+        } = itemQuery;
 
         description = description.replace(/^[\s\S]*?\n/, ''); // skip name
 
-        // console.log('generate setting image for', {description});
+        console.log('generate item image for', {description});
 
-        const imgArrayBuffer = await generateSettingImage({
-          name: settingName,
+        const imgArrayBuffer = await generateItemImage({
+          name: itemName,
           description,
         });
         const file = new Blob([imgArrayBuffer], {
@@ -64,11 +64,11 @@ SettingImage.getInitialProps = async ctx => {
         });
         file.name = imageName;
         const hash = await c.storageClient.uploadFile(file);
-
+        
         await c.databaseClient.setByName('IpfsData', imageTitle, hash);
-
+        
         const imgUrl = c.storageClient.getUrl(hash, file.name);
-        // await ensureUrl(imgUrl);
+        await ensureUrl(imgUrl);
 
         return {
           imgUrl,
@@ -81,4 +81,4 @@ SettingImage.getInitialProps = async ctx => {
     return null;
   }
 };
-export default SettingImage;
+export default ItemImage;

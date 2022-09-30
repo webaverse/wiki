@@ -77,8 +77,8 @@ A mischevious black rabbit with one lop ear standing on her hind legs
       if (bioLines.length >= 3) {
         alt = bioLines.pop();
         bioLines[0] = bioLines[0]
-          .replace(/^"(.+)"$/, '$1')
-          .replace(/^'(.+)'$/, '$1');
+          .replace(/^[^a-zA-Z]+/, '')
+          .replace(/[^a-zA-Z]+$/, '');
         bioLines[0] = capitalizeAllWords(bioLines[0]);
         bioLines[1] = capitalize(bioLines[1]);
         bio = bioLines.join('\n');
