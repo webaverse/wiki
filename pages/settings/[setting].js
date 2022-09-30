@@ -3,6 +3,7 @@ import uuidByString from 'uuid-by-string';
 import Markdown from 'marked-react';
 
 import styles from '../../styles/Setting.module.css'
+import {settingSeed} from '../../constants/seedprompts.js'
 import {Ctx} from '../../context.js';
 import {capitalize, cleanName} from '../../utils.js';
 // import {generateSettingImage} from '../../generators/image/setting.js';
@@ -39,14 +40,9 @@ Setting.getInitialProps = async ctx => {
       content,
     };
   } else {
-    const prompt = `\
-Generate 50 anime RPG video game locations.
-
-# Nihon City
-A solarpunk city based loosely on a Tokyo, Japan. It is the main city of Zone 0 along the street, which makes it extremely busy. It contains the Citadel, a massive structure which serves as a school for AIs. The scenery is lush and turns neon at night. It is a technological utopia.
-
+    const prompt = settingSeed + `
 # ${name}
-`;
+##`;
 
     let description = '';
     const numTries = 5;

@@ -3,6 +3,7 @@ import uuidByString from 'uuid-by-string';
 import Markdown from 'marked-react';
 
 import styles from '../../styles/Character.module.css'
+import {characterSeed} from '../../constants/seedprompts.js'
 import {Ctx} from '../../context.js';
 import {cleanName} from '../../utils.js';
 // import {generateCharacterImage} from '../../generators/image/character.js';
@@ -41,29 +42,7 @@ Character.getInitialProps = async ctx => {
       alt,
     };
   } else {
-    const prompt = `\
-Describe 50 anime characters, with a bio and a one sentence physical description on separate lines.
-
-# Vae Martis
-## Battle Goddess
-A goddess who seems to seek out conflict and intervene for her own amusement. She has an otherworldly beauty that inspires awe and terror in those who gaze upon her face. Her black blade can cut through anything. She was born mortal and had an incredibly hard life, working as a spy and then a mercenary before ascending to godhood and leaving her native plane, filled with her characteristic insatiable bloodlust and sadism
-A stunningly beautiful albino battle goddess with a white pixie haircut wielding a black knife
-
-# Spencer Portens
-## Neural Hacker
-A genius hacker who could get into anything, but computer security was so bad that he got bored of hacking computers, and decided to hack brains. Though brain-hacking is a creepy thing to do to a person, he tries to be somewhat ethical, only hacking people he considers evil or who need something in their brain fixed. Despite his line of work, he seems to have a lot of friends, and though some people find his cocky attitude grating, not many real enemies
-A scruffy hacker with a big smirk on his face, wearing futuristic goggles
-
-# Nel Nibcord
-## Wild Witch
-A chaotic witch from the strange lands in the north, and considered one of the foremost experts in weather manipulating magic. She came from a small village that was utterly destroyed by a blizzard, and went into a mad fugue state when everyone she knew died for a few years, isolating herself completely to develop her craft. She loves animals and they will often completely capture her attention when she sees them, even mid-sentence
-A witch with wild red hair and dark circles under her eyes wearing a colorful top and a hat with bunny ears
-
-# David
-## Menace
-The last survivor of the upstairs rabbits, David has an indominable spirit and a deep love of novelty, hoping to try every single kind of food, even if she has to steal it. She considers the whole world her domain, and bristles at attempts to keep her out of places. She plays with cats more than other rabbits, and is not above biting people she's upset with, or who are in her way
-A mischevious black rabbit with one lop ear standing on her hind legs
-
+    const prompt = characterSeed + `
 # ${name}
 ##`;
 
