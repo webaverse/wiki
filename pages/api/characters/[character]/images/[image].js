@@ -52,15 +52,14 @@ CharacterImage.getInitialProps = async ctx => {
         let {
           content: desc,
         } = characterQuery;
-        const descriptionLines = desc.split(/\n+/);
-        desc = descriptionLines[3];
+        const description = desc.split(/\n+/)[3].split(/\]+/)[0].split(/\[+/)[1];
 
         //desc = desc.replace(/^[\s\S]*?\n[\s\S]*?\n/, ''); // skip name, class
-        console.log('generate character image for', {desc});
+        console.log('generate character image for', {description});
 
         let imgArrayBuffer = await generateCharacterImage({
           name: characterName,
-          description: desc,
+          description: description,
         });
 
         const file = new Blob([imgArrayBuffer], {

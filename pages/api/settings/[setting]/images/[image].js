@@ -51,7 +51,7 @@ SettingImage.getInitialProps = async ctx => {
           content: description,
         } = settingQuery;
 
-        description = description.replace(/^[\s\S]*?\n/, ''); // skip name
+        description = description.split('\n')[0].replace(/#+/, ''); // skip name
 
         // console.log('generate setting image for', {description});
 
