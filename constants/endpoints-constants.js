@@ -1,4 +1,10 @@
-export const weaviateUrl = `https://weaviate.weabaverse.com`;
+export const gpt3Url = `https://gpt3.webaverse.com`; // check | create
+export const voiceUrl = `https://voice-cw.webaverse.com`; // test
 export const stableDiffusionUrl = `https://stable-diffusion.webaverse.com`;
-export const voiceUrl = `https://voice-cw.webaverse.com`;
-export const diffsoundUrl = `https://diffsound.webaverse.com`;
+export const diffsoundUrl = `https://diffsound.webaverse.com`; // test
+export const motionDiffusionUrl = `https://motion-diffusion.webaverse.com`; // check | create
+export const stableDreamfusionUrl = `https://stable-dreamfussion.webaverse.com`; // check | create
+export const get3dUrl = `https://get-3d.webaverse.com`; // check | create
+export const musicGeneratorUrl = `https://music-generator.webaverse.com`; // check | create
+export const weaviateUrl = `https://weaviate.weabaverse.com`; // test
+export const discoDiffusionUrl = `https://disco-diffusion.weabaverse.com`; // check | create
