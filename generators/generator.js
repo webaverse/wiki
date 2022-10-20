@@ -28,19 +28,20 @@ export const generateText = ({model}) => async ({x} = {}) => {
     })
 }
 
-export const generateVoice = ({model}) => async ({x} = {}) => {
-  const url = `${voiceUrl}/voice?x=${x}` // mock endpoint
-  await fetch(url)
-    .then(res => {
-      if (res.ok) {
-        // TODO: return generated voice
-      } else {
-        throw new Error(`invalid status: ${res.status}`);
-      }
-    })
-    .catch(err => {
-      throw new Error(`url error: ${err}`);
-    })
+export const generateVoice = () => async ({s, voice} = {}) => {
+  return `${voiceUrl}/tts?s=${s}&voice=${voice}`
+  // const res = await fetch(url)
+    // .then(res => {
+    //   if (res.ok) {
+    //     return res
+    //   } else {
+    //     throw new Error(`invalid status: ${res.status}`);
+    //   }
+    //   return url
+    // })
+    // .catch(err => {
+    //   throw new Error(`url error: ${err}`);
+    // })
 }
 
 export const generateImage = ({

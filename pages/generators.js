@@ -14,12 +14,16 @@ import {
   generateSprite,
 } from '../generators/generator'
 
+// import Reader from 'riff-wave-reader/lib/reader'
+
 export default function Generators() {
   const [loadingText, setLoadingText] = useState(false)
   const [generatedText, setGeneratedText] = useState(null)
 
   const [loadingVoice, setLoadingVoice] = useState(false)
   const [generatedVoice, setGeneratedVoice] = useState(null)
+  const [transcript, setTranscript] = useState('')
+  const [voice, setVoice] = useState('')
 
   const [loadingImage, setLoadingImage] = useState(false)
   const [generatedImage, setGeneratedImage] = useState(null)
@@ -53,9 +57,18 @@ export default function Generators() {
   }
 
   // generateVoice
+  const handleTranscript = e => {
+    setTranscript(e.target.value)
+  }
+  const handleVoice = e => {
+    setVoice(e.target.value)
+  }
   async function generateTestVoice() {
-    setLoadingVoice(true)
-    // TODO generateVoice()
+    const newVoice = generateVoice()
+    const voiceArrayBuffer = await newVoice({s: transcript, voice})
+    const blob = new Blob([await (await fetch(voiceArrayBuffer)).arrayBuffer()])
+    const audioFromBlob = URL.createObjectURL(blob)
+    setGeneratedVoice(audioFromBlob)
     setLoadingVoice(false)
   }
 
@@ -68,7 +81,7 @@ export default function Generators() {
       s: 'test',
     })
     let imgArrayBuffer = await arrayBuffer(description)
-    console.log(imgArrayBuffer) // TODO create image
+
     const blob = new Blob([imgArrayBuffer], {
       type: 'image/png',
     })
@@ -147,13 +160,42 @@ export default function Generators() {
         <hr />
         <button
           // style={main-btn}
-          onClick={generateTestVoice}
+          // onClick={generateTestVoice}
+          onClick={() =>setLoadingVoice(true)}
         >
           Generate Test Voice
         </button>
-        {loadingVoice && <p>Loading...</p>}
+        {loadingVoice &&
+          <div>
+            <input
+              type='text'
+              id='transcript'
+              name='transcript'
+              placeholder='Transcript'
+              onChange={handleTranscript}
+              value={transcript}
+            />
+            <br />
+            <input
+              type='text'
+              id='voice'
+              name='voice'
+              placeholder='Voice ID'
+              onChange={handleVoice}
+              value={voice}
+            />
+            <br />
+            <button onClick={generateTestVoice}>Generate</button>
+          </div>
+        }
         {!loadingVoice && !generatedVoice && <p>No data</p>}
-        {/* render result here */}
+        {!loadingVoice && generatedVoice && 
+          <div>
+            <br />
+            <audio controls src={generatedVoice}></audio>
+            <br />
+          </div>
+        }
         <hr />
         <button
           // style={main-btn}
@@ -164,12 +206,13 @@ export default function Generators() {
         {loadingImage && <p>Loading...</p>}
         {!loadingImage && !generatedImage && <p>No data</p>}
         {!loadingImage && generatedImage && 
-            <div>
-              <br />
-              <img src={generatedImage} alt='image' />
-              <br />
-            </div>
-          }
+          <div>
+            <br />
+            <img src={generatedImage} alt='image' />
+            <br />
+          </div>
+        }
+        <hr />
         <button
           // style={main-btn}
           onClick={generateTestDiffSound}
