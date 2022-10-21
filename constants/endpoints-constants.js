@@ -1,8 +1,8 @@
 export const gpt3Url = `https://gpt3.webaverse.com`; // check | create
-export const voiceUrl = `https://voice-cw.webaverse.com`; // test
+export const voiceUrl = `https://voice-cw.webaverse.com`;
 // export const voiceUrl = `http://207.53.234.253` // coreweave
 export const stableDiffusionUrl = `https://stable-diffusion.webaverse.com`;
-export const diffsoundUrl = `https://diffsound.webaverse.com`; // test
+export const diffsoundUrl = `https://diffsound.webaverse.com`;
 export const motionDiffusionUrl = `https://motion-diffusion.webaverse.com`; // check | create
 export const stableDreamfusionUrl = `https://stable-dreamfussion.webaverse.com`; // check | create
 export const get3dUrl = `https://get-3d.webaverse.com`; // check | create

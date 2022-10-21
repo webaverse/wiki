@@ -30,6 +30,7 @@ export default function Generators() {
 
   const [loadingSound, setLoadingSound] = useState(false)
   const [generatedSound, setGeneratedSound] = useState(null)
+  const [sound, setSound] = useState('')
 
   const [loadingMotion, setLoadingMotion] = useState(false)
   const [generatedMotion, setGeneratedMotion] = useState(null)
@@ -91,9 +92,16 @@ export default function Generators() {
   }
 
   // generateDiffSound
+  const handleSound = e => {
+    setSound(e.target.value)
+  }
   async function generateTestDiffSound() {
-    setLoadingSound(true)
-    // TODO generateDiffSound()
+    // setGeneratedSound(true)
+    const newSound = generateDiffSound()
+    const soundArrayBuffer = await newSound({s: sound})
+    const blob = new Blob([await (await fetch(soundArrayBuffer)).arrayBuffer()])
+    const soundFromBlob = URL.createObjectURL(blob)
+    setGeneratedSound(soundFromBlob)
     setLoadingSound(false)
   }
 
@@ -213,15 +221,31 @@ export default function Generators() {
           </div>
         }
         <hr />
-        <button
-          // style={main-btn}
-          onClick={generateTestDiffSound}
-        >
+        <button onClick={() => setLoadingSound(true)}>
           Generate Test Sound
         </button>
-        {loadingSound && <p>Loading...</p>}
+        {loadingSound &&
+          <div>
+            <input
+              type='text'
+              id='sound'
+              name='sound'
+              placeholder='Sound'
+              onChange={handleSound}
+              value={sound}
+            />
+            <br />
+            <button onClick={generateTestDiffSound}>Generate</button>
+          </div>
+        }
         {!loadingSound && !generatedSound && <p>No data</p>}
-        {/* render result here */}
+        {!loadingSound && generatedSound &&
+          <div>
+            <br />
+            <audio controls src={generatedSound}></audio>
+            <br />
+          </div>
+        }
         <hr />
         <button
           // style={main-btn}

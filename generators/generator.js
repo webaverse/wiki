@@ -66,19 +66,8 @@ export const generateImage = ({
   }
 }
 
-export const generateDiffSound = ({model}) => async ({x} = {}) => {
-  const url = `${diffsoundUrl}/sound?x=${x}` // mock endpoint
-  await fetch(url)
-    .then(res => {
-      if (res.ok) {
-        // TODO: return generated sound
-      } else {
-        throw new Error(`invalid status: ${res.status}`);
-      }
-    })
-    .catch(err => {
-      throw new Error(`url error: ${err}`);
-    })
+export const generateDiffSound = () => async ({s} = {}) => {
+  return `${diffsoundUrl}/sound?s=${s}`
 }
 
 export const generateMotionDiffusion = ({model}) => async ({x} = {}) => {
