@@ -1,6 +1,5 @@
 export const appUrl = `https://local.webaverse.com`;
 export const gpt3Url = `https://gpt3.webaverse.com`; // check | create
-export const stableDiffusionUrl = `https://stable-diffusion.webaverse.com`;
 export const voiceUrl = `https://voice-cw.webaverse.com`;
 // export const voiceUrl = `http://207.53.234.253` // coreweave
 export const stableDiffusionUrl = `https://stable-diffusion.webaverse.com`;
