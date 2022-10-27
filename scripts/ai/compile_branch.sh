@@ -7,11 +7,11 @@ echo "Checking if lore folder exists... you will need access to webaverse/lore f
 
 # if it doesn't, clone it
 # if it does, reset and pull it
-if [ ! -d "lore" ]; then
+if [ ! -d "../../../lore" ]; then
     git clone https://github.com/webaverse/lore
     cd lore
 else
-    cd lore
+    cd ../../../lore
     git reset --hard
     git pull
 fi
@@ -25,8 +25,8 @@ branch=$1
 # checkout branch
 git checkout $branch
 
-cd ..
+cd ../wiki/scripts/ai/
 
-node format-training-data-local.js ./lore/datasets
+node format-training-data-local.js ../../../lore/datasets
 
 echo "Done!"
