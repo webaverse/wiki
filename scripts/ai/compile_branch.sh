@@ -1,5 +1,7 @@
 # check if lore folder exists
 
+echo "Local compile script -- pass in the branch name from the lore repo as the first argument"
+
 echo "Compiling branch $1..."
 echo "Checking if lore folder exists... you will need access to webaverse/lore for this to work"
 
@@ -26,3 +28,5 @@ git checkout $branch
 cd ..
 
 node format-training-data-local.js ./lore/datasets
+
+echo "Done!"
