@@ -7,10 +7,26 @@ import {
   // getItemAttributeKeys,
 } from './dataset-parser.js';
 
+let fs;
+
 //
 
-const fetchText = async u => {
-  const res = await fetch(u);
+const fetchText = async (u, local) => {
+  // dynamically load the fs module if we are processing local files in node
+  if (!fs && local) {
+    fs = await import('fs');
+  }
+  let res;
+
+  if (local) {
+    const data = fs.readFileSync(u);
+    res = data.toString();
+    console.log('res is', res)
+    return res;
+  } else {
+    res = await fetch(u);
+  }
+
   if (res.ok) {
     const text = await res.text();
     return text;
@@ -60,17 +76,23 @@ const mdSpecs = [
     // descriptionKey: 'Candidate assets',
   },
 ];
-const datasetSpecUrls = mdSpecs.map(mdSpec => `${datasetSpecsBasePath}${mdSpec.url}`);
-const datasetDataUrls = mdSpecs.map(mdSpec => `${datasetDataBasePath}${mdSpec.url}`);
+let datasetSpecUrls = mdSpecs.map(mdSpec => `${datasetSpecsBasePath}${mdSpec.url}`);
+let datasetDataUrls = mdSpecs.map(mdSpec => `${datasetDataBasePath}${mdSpec.url}`);
 
 //
 
 let datasetSpecPromise = null;
-export const getDatasetSpecs = () => {
+export const getDatasetSpecs = (localPathOverride) => {
+
+  if(localPathOverride){
+    datasetSpecUrls = mdSpecs.map(mdSpec => `${localPathOverride}/specs/${mdSpec.url}`);
+    datasetDataUrls = mdSpecs.map(mdSpec => `${localPathOverride}/data/${mdSpec.url}`);
+  }
+
   if (!datasetSpecPromise) {
     datasetSpecPromise = (async () => {
       const datasetSpecs = await Promise.all(datasetSpecUrls.map(async datasetSpecUrl => {
-        const mdText = await fetchText(datasetSpecUrl);
+        const mdText = await fetchText(datasetSpecUrl, !!localPathOverride);
         const datasetSpec = parseDatasetSpec(mdText);
         return datasetSpec;
       }));
@@ -80,10 +102,10 @@ export const getDatasetSpecs = () => {
   return datasetSpecPromise;
 };
 
-export const getTrainingItems = async () => {
-  const datasetSpecs = await getDatasetSpecs();
+export const getTrainingItems = async (localPathOverride) => {
+  const datasetSpecs = await getDatasetSpecs(localPathOverride);
   const itemsArray = await Promise.all(datasetDataUrls.map(async (datasetDataUrl, index) => {
-    const mdText = await fetchText(datasetDataUrl);
+    const mdText = await fetchText(datasetDataUrl, !!localPathOverride);
     const datasetSpec = datasetSpecs[index];
     let items = parseDatasetItems(mdText, datasetSpec);
     items = items.map(item => formatTrainingItemCandidates(item, datasetSpec)).flat();
