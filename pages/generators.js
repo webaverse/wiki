@@ -2,24 +2,16 @@ import Head from 'next/head'
 import {useState} from 'react'
 import styles from '../styles/Home.module.css'
 import {
-  generateText,
   generateVoice,
   generateImage,
   generateDiffSound,
-  generateMotionDiffusion,
-  generateObjectOrConsumable,
-  generateGet3DObject,
-  generateMusic,
-  generateWeaviateCharacter,
-  generateSprite,
+  generatePixelArt,
+  generateBlipResult,
 } from '../generators/generator'
 
 // import Reader from 'riff-wave-reader/lib/reader'
 
 export default function Generators() {
-  const [loadingText, setLoadingText] = useState(false)
-  const [generatedText, setGeneratedText] = useState(null)
-
   const [loadingVoice, setLoadingVoice] = useState(false)
   const [generatedVoice, setGeneratedVoice] = useState(null)
   const [transcript, setTranscript] = useState('')
@@ -32,30 +24,12 @@ export default function Generators() {
   const [generatedSound, setGeneratedSound] = useState(null)
   const [sound, setSound] = useState('')
 
-  const [loadingMotion, setLoadingMotion] = useState(false)
-  const [generatedMotion, setGeneratedMotion] = useState(null)
+  const [loadingPixelArt, setLoadingPixelArt] = useState(false)
+  const [generatedPixelArt, setGeneratedPixelArt] = useState(null)
 
-  const [loadingObject, setLoadingObject] = useState(false)
-  const [generatedObject, setGeneratedObject] = useState(null)
-
-  const [loadingGet3DObject, setLoadingGet3DObject] = useState(false)
-  const [generatedGet3DObject, setGeneratedGet3DObject] = useState(null)
-
-  const [loadingMusic, setLoadingMusic] = useState(false)
-  const [generatedMusic, setGeneratedMusic] = useState(null)
-
-  const [loadingCharacter, setLoadingCharacter] = useState(false)
-  const [generatedCharacter, setGeneratedCharacter] = useState(null)
-
-  const [loadingSprite, setLoadingSprite] = useState(false)
-  const [generatedSprite, setGeneratedSprite] = useState(null)
-
-  // generateText
-  async function generateTestText() {
-    setLoadingText(true)
-    // TODO generateText()
-    setLoadingText(false)
-  }
+  const [loadingBlip, setLoadingBlip] = useState(false)
+  const [generatedBlip, setGeneratedBlip] = useState('')
+  const [blipImageUrl, setBlipImageUrl] = useState('')
 
   // generateVoice
   const handleTranscript = e => {
@@ -105,46 +79,29 @@ export default function Generators() {
     setLoadingSound(false)
   }
 
-  // generateMotionDiffusion
-  async function generateTestMotionDiffusion() {
-    setLoadingMotion(true)
-    // TODO generateMotionDiffusion()
-    setLoadingMotion(false)
+  // generate pixel art
+  async function generateTestPixelArt() {
+    setLoadingPixelArt(true)
+    const newPixelArt = generatePixelArt()
+    const pixelArtBuffer = await newPixelArt()
+
+    const blob = new Blob([pixelArtBuffer], {
+      type: 'image/png',
+    })
+    const image = URL.createObjectURL(blob)
+    setGeneratedPixelArt(image)
+    setLoadingPixelArt(false)
   }
 
-  // generateObjectOrConsumable
-  async function generateTestObjectOrConsumable() {
-    setLoadingObject(true)
-    // TODO generateObjectOrConsumable()
-    setLoadingObject(false)
+  // generate BLIP result
+  const handleBlip = e => {
+    setBlipImageUrl(e.target.value)
   }
-
-  // generateGet3DObject
-  async function generateTestGet3DObject() {
-    setLoadingGet3DObject(true)
-    // TODO generateGet3DObject()
-    setLoadingGet3DObject(false)
-  }
-
-  // generateMusic
-  async function generateTestMusic() {
-    setLoadingMusic(true)
-    // TODO generateMusic()
-    setLoadingMusic(false)
-  }
-
-  // generateWeaviateCharacter
-  async function generateTestWeaviateCharacter() {
-    setLoadingCharacter(true)
-    // TODO generateWeaviateCharacter()
-    setLoadingCharacter(false)
-  }
-
-  // generateSprite
-  async function generateTestSprite() {
-    setLoadingSprite(true)
-    // TODO generateSprite()
-    setLoadingSprite(false)
+  async function generateBlip() {
+    const newBlip = generateBlipResult()
+    const result = await newBlip({s: blipImageUrl})
+    setGeneratedBlip(result)
+    setLoadingBlip(false)
   }
 
   // TODO styling!!
@@ -158,18 +115,8 @@ export default function Generators() {
       <main className={styles.main}>
         <button
           // style={main-btn}
-          onClick={generateTestText}
-        >
-          Generate Test Text
-        </button>
-        {loadingText && <p>Loading...</p>}
-        {!loadingText && !generatedText && <p>No data</p>}
-        {/* render result here */}
-        <hr />
-        <button
-          // style={main-btn}
           // onClick={generateTestVoice}
-          onClick={() =>setLoadingVoice(true)}
+          onClick={() => setLoadingVoice(true)}
         >
           Generate Test Voice
         </button>
@@ -248,64 +195,47 @@ export default function Generators() {
         }
         <hr />
         <button
-          // style={main-btn}
-          onClick={generateTestMotionDiffusion}
+          onClick={generateTestPixelArt}
         >
-          Generate Test Motion
+          Generate Pixel Art
         </button>
-        {loadingMotion && <p>Loading...</p>}
-        {!loadingMotion && !generatedMotion && <p>No data</p>}
-        {/* render result here */}
+        {loadingPixelArt && <p>Loading, can take up to one minute...</p>}
+        {!loadingPixelArt && !generatedPixelArt && <p>No data</p>}
+        {!loadingPixelArt && generatedPixelArt && 
+          <div>
+            <br />
+            <img src={generatedPixelArt} alt='image' />
+            <br />
+          </div>
+        }
         <hr />
         <button
-          // style={main-btn}
-          onClick={generateTestObjectOrConsumable}
+          onClick={() => setLoadingBlip(true)}
         >
-          Generate Test Object/Consumable
+          Generate BLIP data
         </button>
-        {loadingObject && <p>Loading...</p>}
-        {!loadingObject && !generatedObject && <p>No data</p>}
-        {/* render result here */}
-        <hr />
-        <button
-          // style={main-btn}
-          onClick={generateTestGet3DObject}
-        >
-          Generate Test 3D Object
-        </button>
-        {loadingGet3DObject && <p>Loading...</p>}
-        {!loadingGet3DObject && !generatedGet3DObject && <p>No data</p>}
-        {/* render result here */}
-        <hr />
-        <button
-          // style={main-btn}
-          onClick={generateTestMusic}
-        >
-          Generate Test Music
-        </button>
-        {loadingMusic && <p>Loading...</p>}
-        {!loadingMusic && !generatedMusic && <p>No data</p>}
-        {/* render result here */}
-        <hr />
-        <button
-          // style={main-btn}
-          onClick={generateTestWeaviateCharacter}
-        >
-          Generate Test Character
-        </button>
-        {loadingCharacter && <p>Loading...</p>}
-        {!loadingCharacter && !generatedCharacter && <p>No data</p>}
-        {/* render result here */}
-        <hr />
-        <button
-          // style={main-btn}
-          onClick={generateTestSprite}
-        >
-          Generate Test Sprite
-        </button>
-        {loadingSprite && <p>Loading...</p>}
-        {!loadingSprite && !generatedSprite && <p>No data</p>}
-        {/* render result here */}
+        {loadingBlip &&
+          <div>
+            <input
+              type='text'
+              id='img_url'
+              name='img_url'
+              placeholder='Image URL'
+              onChange={handleBlip}
+              value={blipImageUrl}
+            />
+            <br />
+            <button onClick={generateBlip}>Generate</button>
+          </div>
+        }
+        {!loadingBlip && !generatedBlip && <p>No data</p>}
+        {!loadingBlip && generatedBlip && 
+          <div>
+            <br />
+            <span>{generatedBlip}</span>
+            <br />
+          </div>
+        }
         <hr />
       </main>
     </div>

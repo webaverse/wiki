@@ -1,32 +1,12 @@
-// import {stableDiffusionUrl} from '../../constants/endpoints.js';
-import fetch from 'node-fetch';
+// import {stableDiffusionUrl} from '../../constants/endpoints.js'
+import fetch from 'node-fetch'
 import {
-  gpt3Url,
   voiceUrl,
   stableDiffusionUrl,
   diffsoundUrl,
-  motionDiffusionUrl,
-  stableDreamfusionUrl,
-  get3dUrl,
-  musicGeneratorUrl,
-  weaviateUrl,
-  discoDiffusionUrl,
-} from '../constants/endpoints-constants';
-
-export const generateText = ({model}) => async ({x} = {}) => {
-  const url = `${gpt3Url}/text?x=${x}` // mock endpoint
-  await fetch(url)
-    .then(res => {
-      if (res.ok) {
-        // TODO: return generated text
-      } else {
-        throw new Error(`invalid status: ${res.status}`);
-      }
-    })
-    .catch(err => {
-      throw new Error(`url error: ${err}`);
-    })
-}
+  pixelArtUrl,
+  blipUrl,
+} from '../constants/endpoints-constants'
 
 export const generateVoice = () => async ({s, voice} = {}) => {
   return `${voiceUrl}/tts?s=${s}&voice=${voice}`
@@ -39,18 +19,18 @@ export const generateImage = ({
   name,
   description,
 } = {}) => {
-  const s = `${prefix} ${description}`;
-  const u = `${stableDiffusionUrl}/image?s=${encodeURIComponent(s)}&model=${modelName}`;
-  const res = await fetch(u);
+  const s = `${prefix} ${description}`
+  const u = `${stableDiffusionUrl}/image?s=${encodeURIComponent(s)}&model=${modelName}`
+  const res = await fetch(u)
   if (res.ok) {
-    const arrayBuffer = await res.arrayBuffer();
+    const arrayBuffer = await res.arrayBuffer()
     if (arrayBuffer.byteLength > 0) {
-      return arrayBuffer;
+      return arrayBuffer
     } else {
-      throw new Error(`generated empty image`);
+      throw new Error(`generated empty image`)
     }
   } else {
-    throw new Error(`invalid status: ${res.status}`);
+    throw new Error(`invalid status: ${res.status}`)
   }
 }
 
@@ -58,92 +38,45 @@ export const generateDiffSound = () => async ({s} = {}) => {
   return `${diffsoundUrl}/sound?s=${s}`
 }
 
-export const generateMotionDiffusion = ({model}) => async ({x} = {}) => {
-  const url = `${motionDiffusionUrl}/motion?x=${x}` // mock endpoint
-  await fetch(url)
-    .then(res => {
-      if (res.ok) {
-        // TODO: return generated motion
-      } else {
-        throw new Error(`invalid status: ${res.status}`);
-      }
-    })
-    .catch(err => {
-      throw new Error(`url error: ${err}`);
-    })
+export const generatePixelArt = () => async () => {
+  const delay = ms => new Promise(res => setTimeout(res, ms))
+  let queryId = ''
+  const generate = `${pixelArtUrl}/generate?steps=25&seed=30&s=snowy mountains`
+  await fetch(generate)
+    .then(r => r.json())
+    .then(d => {queryId = d.id})
+    .catch()
+  await delay(50000)
+  const pixelArt = `${pixelArtUrl}/generate_result?query_id=${queryId}`
+  const res = await fetch(pixelArt)
+  if (res.ok) {
+    const arrayBuffer = await res.arrayBuffer()
+    if (arrayBuffer.byteLength > 0) {
+      return arrayBuffer
+    } else {
+      throw new Error(`generated empty image`)
+    }
+  } else {
+    throw new Error(`invalid status: ${res.status}`)
+  }
 }
 
-export const generateObjectOrConsumable = ({model}) => async ({x} = {}) => {
-  const url = `${stableDreamfusionUrl}/object?x=${x}` // mock endpoint
-  await fetch(url)
-    .then(res => {
-      if (res.ok) {
-        // TODO: return generated object | consumable
-      } else {
-        throw new Error(`invalid status: ${res.status}`);
-      }
-    })
-    .catch(err => {
-      throw new Error(`url error: ${err}`);
-    })
-}
+// export const generateDiffSound = () => async ({s} = {}) => {
+export const generateBlipResult = () => async ({s} = {}) => {
+  const u = `${blipUrl}/upload/url?task=image_captioning&img_url=${s}`
 
-export const generateGet3DObject = ({model}) => async ({x} = {}) => {
-  const url = `${get3dUrl}/object?x=${x}` // mock endpoint
-  await fetch(url)
-    .then(res => {
-      if (res.ok) {
-        // TODO: return generated object
-      } else {
-        throw new Error(`invalid status: ${res.status}`);
-      }
+  await fetch(u, {  
+    mode: 'no-cors',
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': '*',
+      'Cross-Origin-Embedder-Policy': 'same-origin'
+    }    
+  })
+    .then(r => r.json())
+    .then(d => {
+      console.log(d)
+      return d
     })
-    .catch(err => {
-      throw new Error(`url error: ${err}`);
-    })
-}
-
-export const generateMusic = ({model}) => async ({x} = {}) => {
-  const url = `${musicGeneratorUrl}/music?x=${x}` // mock endpoint
-  await fetch(url)
-    .then(res => {
-      if (res.ok) {
-        // TODO: return generated music
-      } else {
-        throw new Error(`invalid status: ${res.status}`);
-      }
-    })
-    .catch(err => {
-      throw new Error(`url error: ${err}`);
-    })
-}
-
-export const generateWeaviateCharacter = ({model}) => async ({x} = {}) => {
-  const url = `${weaviateUrl}/character?x=${x}` // mock endpoint
-  await fetch(url)
-    .then(res => {
-      if (res.ok) {
-        // TODO: return generated character ??
-      } else {
-        throw new Error(`invalid status: ${res.status}`);
-      }
-    })
-    .catch(err => {
-      throw new Error(`url error: ${err}`);
-    })
-}
-
-export const generateSprite = ({model}) => async ({x} = {}) => {
-  const url = `${discoDiffusionUrl}/sprite?x=${x}` // mock endpoint
-  await fetch(url)
-    .then(res => {
-      if (res.ok) {
-        // TODO: return generated sprite
-      } else {
-        throw new Error(`invalid status: ${res.status}`);
-      }
-    })
-    .catch(err => {
-      throw new Error(`url error: ${err}`);
-    })
+    .catch(e => {console.log(e)})
 }
