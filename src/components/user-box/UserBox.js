@@ -4,9 +4,50 @@ import styles from "./UserBox.module.css";
 import CustomButton from "../custom-button";
 import Link from "next/link";
 
+// import { ContentObjectContext } from "../../../pages/[contents]/[name]";
+import { AccountContext } from "../../hooks/web3AccountProvider";
+
+
+
 export const UserBox = ({ className }) => {
-    const loggedIn = false;
+    const account = useContext( AccountContext );
+    // const loggedIn = false;
     const [ open , setOpen] = useState(false);
+    const { isConnected, currentAddress, connectWallet, disconnectWallet, errorMessage, wrongChain, getAccounts, getAccountDetails } = account;
+    const [ loggedIn, setLoggedIn] = useState(false);
+    const [address, setAddress] = useState('');
+
+
+    
+    const metaMaskLogin = async event => {
+        event.preventDefault();
+        event.stopPropagation();
+        if (!loggedIn) {
+            setLoggedIn(true);
+            try {
+              const walletAddr = await connectWallet();
+              if(walletAddr) {
+                setAddress(walletAddr)
+              }
+            } catch (err) {
+              console.warn(err);
+            } finally {
+              setLoggedIn(false);
+              setOpen(false)
+            }
+          }
+    };
+
+    const logOut = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        disconnectWallet();
+        setAddress("");
+        setLoggedIn(false);
+        setOpen(false)
+    }
+
+    
     return (
         <div className={classnames(styles.userBoxWrap, className)}>
             <div className={styles.leftCorner} />
@@ -30,7 +71,7 @@ export const UserBox = ({ className }) => {
                         />
                     </a>
                 </li>
-                {!loggedIn && (
+                {!address && (
                     <>
                         <li>
                             <div className={styles.profileImage}>
@@ -56,7 +97,7 @@ export const UserBox = ({ className }) => {
                         </li>
                     </>
                 )}
-                {loggedIn && (
+                {address && (
                     <>
                         <li>
                             <div className={styles.profileImage}>
@@ -74,7 +115,7 @@ export const UserBox = ({ className }) => {
                                     {"Polygon"}
                                 </div>
                                 <div className={styles.walletAddress}>
-                                    {"0x5d...C26e2d"}
+                                    { address? address.slice(0, 7) + '...' + address.slice(-6) : ''}
                                 </div>
                             </div>
                             <CustomButton
@@ -83,6 +124,7 @@ export const UserBox = ({ className }) => {
                                 icon="logout"
                                 size={28}
                                 className={styles.loginButton}
+                                onClick={logOut}
                             />
                         </li>
                     </>
@@ -104,6 +146,7 @@ export const UserBox = ({ className }) => {
                     text="Metamask"
                     size={18}
                     className={styles.methodButton}
+                    onClick={metaMaskLogin}
                 />
                 <CustomButton
                     theme="light"
@@ -111,6 +154,7 @@ export const UserBox = ({ className }) => {
                     text="Phantom"
                     size={18}
                     className={styles.methodButton}
+                    onClick={metaMaskLogin}
                 />
                 <CustomButton
                     theme="light"

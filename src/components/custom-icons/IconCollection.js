@@ -60,6 +60,10 @@ export const IconCollection = [
         file: "/assets/icons/login.svg"
     },
     {
+        name: 'logout',
+        file: "/assets/icons/logout.svg"
+    },
+    {
         name: 'attack',
         file: "/assets/icons/attack.svg"
     },
