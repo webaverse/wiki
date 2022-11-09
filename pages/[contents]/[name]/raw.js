@@ -1,8 +1,8 @@
 import uuidByString from 'uuid-by-string';
 // import Markdown from 'marked-react';
 
-import styles from '../../../styles/Character.module.css'
-import {Ctx} from '../../../context.js';
+import styles from '../../../styles/ContentObject.module.css'
+import {Ctx} from '../../../clients/context.js';
 import {cleanName} from '../../../utils.js';
 // import {DatasetEngine, formatItem} from '../../datasets/datasets.js';
 // import datasets from '../../datasets/data.js';
@@ -17,7 +17,9 @@ const ContentObjectRaw = ({
   if (!error) {
     return (
       <div className={styles.character}>
-        <pre>{text}</pre>
+        <div className={styles.contentWrap}>
+          <pre>{text}</pre>
+        </div>
       </div>
     );
   } else {

@@ -1,0 +1,116 @@
+.chatWrap {
+    box-sizing: border-box;
+    padding: 0;
+    margin: -10px 0;
+    margin-bottom: 12px;
+    position: relative;
+    background-color: #162530;
+}
+/*
+.chatWrap::after {
+    display: block;
+    content: " ";
+    position: absolute;
+    top: 0;
+    right: -8px;
+    height: 100%;
+    width: 16px;
+    transform: skewX(-1deg);
+    background-color: inherit !important;
+    z-index: 0;
+}
+.chatWrap::before {
+    display: block;
+    content: " ";
+    position: absolute;
+    top: 0;
+    left: -8px;
+    height: 100%;
+    width: 16px;
+    transform: skewX(1deg);
+    background-color: inherit !important;
+    z-index: 0;
+}
+*/
+
+.chat {
+    z-index: 1;
+    position: relative;
+    padding: 34px 48px 34px 0;
+}
+
+.chatWrap .scrollChatContent {
+    width: 100%;
+    max-height: 340px;
+    padding: 0;
+    padding-left: 48px;
+    box-sizing: border-box;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+
+.chatWrap ul {
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+.chatWrap ul li {
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.chatWrap h4 {
+    text-align: center;
+    color: #88989e;
+    margin: 0 0 18px 0;
+}
+
+.titleBox {
+    border-bottom: 1px solid #112029;
+    padding: 14px 44px;
+    color: #88989e;
+    z-index: 1;
+}
+.titleBox h3 {
+    padding: 0;
+    margin: 0;
+}
+
+.rightAlign .chatAvatarWrap {
+    left: auto;
+    right: 0;
+    margin-right: 0 !important;
+}
+.messageWrap.rightAlign {
+    text-align: right;
+}
+.messageWrap.rightAlign .messageContent::after {
+    display: none;
+}
+.messageWrap.rightAlign .messageContent::before {
+    transform: skewX(12deg);
+    display: block;
+}
+.messageWrap.rightAlign .messageContentWrap {
+    margin-left: 0;
+    margin-right: 58px;
+}
+.messageWrap.rightAlign .infoWrap * {
+    text-align: right;
+}
+.messageWrap.rightAlign .infoWrap span {
+    float: left;
+    margin-left: -2px;
+    padding-right: 6px;
+}
+
+.messageWrap.rightAlign .messageContent {
+    background-color: #112029 !important;
+}
+.messageWrap.rightAlign .avatarImageWrap .frame {
+    height: 100%;
+    opacity: 0.3;
+}
+
+

@@ -23,6 +23,7 @@ export const ensureUrl = async (url) => {
 };
 export const cleanName = (name) => {
     name = name.replace(/_/g, " ");
+    name = name.toLowerCase();
     name = capitalizeAllWords(name);
     return name;
 };
@@ -67,12 +68,12 @@ export const formatUrls = async (md) => {
 
 // Format Sections
 
-// Section Title Separator
-const sectionSeperator = "##";
-// Title & Description Separator by first ":" in the string
-const titleDescriptionSeperator = /:(.*)/s;
+export const getSectionsContentArray = async (content, query) => {
+    // Section Title Separator
+    const sectionSeperator = "##";
+    // Title & Description Separator by first ":" in the string
+    const titleDescriptionSeperator = /:(.*)/s;
 
-export const getSections = async (content) => {
     const sections = [];
     const sectionsArray = content.split(sectionSeperator);
     await sectionsArray.map((section) => {
@@ -85,6 +86,70 @@ export const getSections = async (content) => {
         }
     });
     return sections;
+};
+
+// Format Chat ( Get Array )
+export const getChatContentArray = async (content) => {
+
+    // Count every new line after "## Chat:" as a new message/item.
+    const regMessages = /\n(.*)\n/g;
+    // Split name & message by the first ":" in the string.
+    const regNameMessage = /:(.*)/s;
+    // Match and split notifications by "######" in the string.
+    const regNotifications = /######(.*)/s;
+    //
+    const chatArray = [];
+
+    if (content) {
+        let chatItemsArray = content.trim().split(regMessages);
+        console.log("Chat Array: ", chatItemsArray);
+        if (chatItemsArray) {
+            let nextAuthor;
+            let chatItem = {
+                type: "",
+                author: "",
+                message: "",
+            };
+            await chatItemsArray.map((item, index) => {
+                if (item) {
+                    let author = item.split(regNameMessage)[0]?.trim();
+                    let message = item.split(regNameMessage)[1]?.trim();
+                    // Set next message author
+                    nextAuthor = chatItemsArray[index + 1]
+                        ?.split(regNameMessage)[0]
+                        ?.trim();
+                    // Check if the line is a notification 
+                    let isNotification = item.match(regNotifications)
+                        ? true
+                        : false;
+                    //
+                    if (isNotification) {
+                        chatItem.type = "Notification";
+                        chatItem.author = "System";
+                        let notification = item
+                            .split(regNotifications)[1]
+                            ?.trim();
+                        chatItem.message = notification;
+                    } else {
+                        chatItem.type = "Message";
+                        chatItem.author = author;
+                        chatItem.message = message;
+                    }
+                    //
+                    if (chatItem?.author && chatItem?.message) {
+                        chatArray.push(chatItem);
+                        // Clear chat item
+                        chatItem = {
+                            type: "",
+                            author: "",
+                            message: "",
+                        };
+                    }
+                }
+            });
+        }
+    }
+    return chatArray;
 };
 
 // Fetch Gallery Images as an Array

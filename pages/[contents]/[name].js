@@ -8,7 +8,7 @@ import {
     formatImages,
     formatUrls,
     getGalleryArray,
-    getSections,
+    getSectionsContentArray,
 } from "../../utils.js";
 import { generateItem } from "../../datasets/dataset-generator.js";
 import { formatItemText } from "../../datasets/dataset-parser.js";
@@ -23,6 +23,7 @@ import {
 import { MiniMap } from "../../src/components/mini-map/MiniMap";
 import { ImageLoader } from "../../src/components/image-loader/ImageLoader";
 import { MetaTags } from "../../src/components/meta-tags/MetaTags";
+import { fetchContent } from "../../src/utils/api";
 
 //
 
@@ -40,7 +41,8 @@ const hideSections = ["Name", "Class", "Image"];
 
 //
 
-const ContentObject = ({ type, title, content }) => {
+const ContentObject = ({ url }) => {
+
     const [itemName, setItemName] = useState("");
     const [itemClass, setItemClass] = useState("");
     const [featuredImage, setFeaturedImage] = useState("");
@@ -51,50 +53,71 @@ const ContentObject = ({ type, title, content }) => {
     const [editSource, setEditSource] = useState(false);
     const [formatedContent, setFormatedContent] = useState();
 
+    const [data, setData] = useState();
+    const [loading, setLoading] = useState();
+
     React.useEffect(() => {
-        if (content) {
-            formatImages(content, type).then((fiContent) => {
+        setLoading(true);
+            fetchContent(url).then((data) => {
+                setData(data);
+                setLoading(false);
+            });
+    }, [url]);
+
+    React.useEffect(() => {
+        if (data?.content && data?.type) {
+            formatImages(data?.content, data?.type).then((fiContent) => {
                 formatUrls(fiContent).then((fuContent) => {
                     setFormatedContent(fuContent);
                 });
             });
         }
-    }, [content]);
+    }, [data]);
 
     React.useEffect(() => {
         if (formatedContent) {
-            getSections(formatedContent).then((res) => {
-                setSections(res);
-                setItemName(
-                    res.filter((item) => item.title === "Name")[0]?.content
-                );
-                setItemClass(
-                    res.filter((item) => item.title === "Class")[0]?.content
-                );
-            });
-            getGalleryArray(formatedContent).then((res) => {
-                if (res) {
-                    setGallery(res);
+            getSectionsContentArray(formatedContent).then(
+                (sectionsArrayResponse) => {
+                    setSections(sectionsArrayResponse);
+                    setItemName(
+                        sectionsArrayResponse?.filter(
+                            (item) => item.title === "Name"
+                        )[0]?.content
+                    );
+                    setItemClass(
+                        sectionsArrayResponse?.filter(
+                            (item) => item.title === "Class"
+                        )[0]?.content
+                    );
+                }
+            );
+            getGalleryArray(formatedContent).then((galleryArrayResponse) => {
+                if (galleryArrayResponse) {
+                    setGallery(galleryArrayResponse);
                 }
             });
         }
     }, [formatedContent]);
 
     React.useEffect(() => {
-        const imageContent = sections.filter(
-            (item) => item.title === "Image"
-        )[0]?.content;
-        if (imageContent) {
-            const match = imageContent.match(/(?<=\().+?(?=\))/g);
-            if (match) {
-                setFeaturedImage(match[0] + ".png");
+        if (sections && sections.length > 0) {
+            const imageContent = sections.filter(
+                (item) => item.title.toLowerCase() === "image"
+            )[0]?.content;
+            if (imageContent) {
+                const match = imageContent.match(/(?<=\().+?(?=\))/g);
+                if (match) {
+                    setFeaturedImage(match[0] + ".png");
+                } else {
+                    setFeaturedImage(
+                        `/api/images/${data?.type}s/${imageContent}.png`
+                    );
+                }
             } else {
-                setFeaturedImage(`/api/images/${type}s/${imageContent}.png`);
-            }
-        } else {
-            if (gallery) {
-                let randIndex = Math.floor(Math.random() * gallery.length);
-                setFeaturedImage(gallery[randIndex]?.url);
+                if (gallery) {
+                    let randIndex = Math.floor(Math.random() * gallery.length);
+                    setFeaturedImage(gallery[randIndex]?.url);
+                }
             }
         }
     }, [sections]);
@@ -111,6 +134,9 @@ const ContentObject = ({ type, title, content }) => {
         saveContent();
     };
 
+    if (loading) return <p>Loading...</p>;
+    if (!data) return <p>No profile data</p>;
+
     return (
         <div className={styles.character}>
             <MetaTags
@@ -126,7 +152,7 @@ const ContentObject = ({ type, title, content }) => {
             />
             <div className={styles.contentWrap}>
                 <div className={styles.name}>
-                    <span>{`${type}s`}</span>
+                    <span>{`${data?.type}s`}</span>
                     {itemName}
                     {!editSource ? (
                         <div className={styles.sourceActions}>
@@ -157,34 +183,41 @@ const ContentObject = ({ type, title, content }) => {
                 {!editSource ? (
                     <React.Fragment>
                         <div className={styles.rightContent}>
-                            <div className={styles.title}>{itemName}</div>
-                            {itemClass && (
-                                <div className={styles.subtitle}>
-                                    {itemClass}
-                                </div>
+                            {data?.type !== "chat" && (
+                                <>
+                                    <div className={styles.title}>
+                                        {itemName}
+                                    </div>
+                                    {itemClass && (
+                                        <div className={styles.subtitle}>
+                                            {itemClass}
+                                        </div>
+                                    )}
+                                    <div className={styles.previewImageWrap}>
+                                        <img
+                                            src={"/assets/image-frame.svg"}
+                                            className={styles.frame}
+                                        />
+                                        <div className={styles.mask}>
+                                            <ImageLoader
+                                                url={featuredImage}
+                                                className={styles.image}
+                                                rerollable={true}
+                                            />
+                                        </div>
+                                    </div>
+                                </>
                             )}
-                            <div className={styles.previewImageWrap}>
-                                <img
-                                    src={"/assets/image-frame.svg"}
-                                    className={styles.frame}
-                                />
-                                <div className={styles.mask}>
-                                    <ImageLoader
-                                        url={featuredImage}
-                                        className={styles.image}
-                                        rerollable={true}
-                                    />
-                                </div>
-                            </div>
                             <div>
                                 {sections &&
-                                    sections.map((section, i) => {
+                                    sections.map((section, index) => {
                                         if (rightColumn.includes(section.title))
                                             return (
                                                 <RightSection
                                                     title={section.title}
                                                     content={section.content}
-                                                    index={i}
+                                                    type={data?.type}
+                                                    index={index}
                                                 />
                                             );
                                     })}
@@ -194,7 +227,7 @@ const ContentObject = ({ type, title, content }) => {
                         <div className={styles.leftContent}>
                             <div className={styles.markdown}>
                                 {sections &&
-                                    sections.map((section, i) => {
+                                    sections.map((section, index) => {
                                         if (
                                             !rightColumn.includes(
                                                 section.title
@@ -209,7 +242,8 @@ const ContentObject = ({ type, title, content }) => {
                                                     content={section.content}
                                                     editSection={editSection}
                                                     gallery={gallery}
-                                                    index={i}
+                                                    type={data?.type}
+                                                    index={index}
                                                 />
                                             );
                                         }
@@ -227,50 +261,10 @@ const ContentObject = ({ type, title, content }) => {
 
 ContentObject.getInitialProps = async (ctx) => {
     const { req } = ctx;
-    const match = req.url.match(/^\/([^\/]*)\/([^\/]*)/);
-    let type = match ? match[1].replace(/s$/, "") : "";
-    let name = match ? match[2] : "";
-    name = decodeURIComponent(name);
-    name = cleanName(name);
-
-    const c = new Ctx();
-    const title = `${type}/${name}`;
-    const id = uuidByString(title);
-    const query = await c.databaseClient.getByName("Content", title);
-    if (query) {
-        const { content } = query;
-        return {
-            type,
-            id,
-            title,
-            content,
-        };
-    } else {
-        const c = new Ctx();
-        const [datasetSpecs, generatedItem] = await Promise.all([
-            getDatasetSpecs(),
-            generateItem(type, name),
-        ]);
-        const datasetSpec = datasetSpecs.find((ds) => ds.type === type);
-        // console.log('got datset spec', {datasetSpec});
-        const itemText = formatItemText(generatedItem, datasetSpec);
-
-        // const imgUrl = `/api/characters/${name}/images/main.png`;
-
-        const content = `\
-${itemText}
-`;
-        // ![](${encodeURI(imgUrl)})
-
-        await c.databaseClient.setByName("Content", title, content);
-
-        return {
-            type,
-            id,
-            title,
-            content,
-        };
-    }
+    const url = req.url;
+    return {
+        url
+    };
 };
 
 export default ContentObject;

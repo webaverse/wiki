@@ -10,10 +10,12 @@ const globalImagePrompt = `trending on ArtStation`;
 
 const CharacterImage = async (req, res) => {
     const props = await CharacterImage.getInitialProps({ req });
+    console.log(props);
     if (props) {
         const { imgUrl } = props;
 
         const proxyRes = await fetch(imgUrl);
+        
         // proxy the status and headers
         res.status(proxyRes.status);
         for (const [key, value] of proxyRes.headers.entries()) {
@@ -33,7 +35,8 @@ CharacterImage.getInitialProps = async (ctx) => {
     // Check if ?reroll=true is passed in the query
     const isReRoll = req.query?.reroll;
 
-    console.log(req.url);
+    console.log("Image URL: ", req.url);
+    console.log("Reroll: ", req.query?.reroll);
     // Clean url from passed values after ?
     const reqUrlClean = req.url.replace(/\?.*$/, "");
 

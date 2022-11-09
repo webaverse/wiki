@@ -3,13 +3,15 @@ import classnames from "classnames";
 import Markdown from "marked-react";
 import styles from "./Sections.module.css";
 import { Gallery } from "../gallery";
+import { ChatBox } from "../chat-box/ChatBox";
 
 export const LeftSection = (props) => {
-    const { title, content, index, editSection, gallery } = props;
+    const { title, content, index, editSection, gallery, type } =
+        props;
     const [editSource, setEditSource] = useState(false);
-    const [iniContent, setIniContent] = useState(content);
     const [editedContent, setEditedContent] = useState(content);
     const [showEdit, setShowEdit] = useState(true);
+    const [description, setDescription] = useState(false);
     const handleContentChange = (e) => {
         setEditedContent(e.target.value);
     };
@@ -83,15 +85,21 @@ export const LeftSection = (props) => {
                         </div>
                     </div>
                 ) : (
-                    <>
+                    <div>
                         {title.toLowerCase() === "image gallery" ? (
                             <Gallery gallery={gallery} />
+                        ) : title.toLowerCase() === "chat" ? (
+                            <ChatBox
+                                content={content}
+                                type={type}
+                                description={description}
+                            />
                         ) : (
                             <Markdown gfm openLinksInNewTab={false}>
                                 {content}
                             </Markdown>
                         )}
-                    </>
+                    </div>
                 )}
             </div>
         </div>

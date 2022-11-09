@@ -6,6 +6,14 @@
   font-family: 'TTSC-Bold';
   src:  url('/fonts/TT Squares Condensed Bold.otf');
 }
+@font-face {
+  font-family: 'TTSC-Regular-Italic';
+  src:  url('/fonts/TT Squares Condensed Regular Italic.otf');
+}
+@font-face {
+  font-family: 'TTSC-Bold-Italic';
+  src:  url('/fonts/TT Squares Condensed Bold Italic.otf');
+}
 
 html,
 body {
@@ -27,6 +35,20 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+::-webkit-scrollbar {
+  width: 0.4em;
+  padding: 12px 0 !important;
+  background: #112029;
+}
+::-webkit-scrollbar-track {
+  background-color: none !important;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #20323e;
+  /* outline: 0px solid rgb(17 32 41 / 10%); */
+  z-index: 1;
 }
 
 @media (prefers-color-scheme: dark) {
