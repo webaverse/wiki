@@ -243,7 +243,8 @@ const ContentObject = ({ url }) => {
                                                     editSection={editSection}
                                                     gallery={gallery}
                                                     type={data?.type}
-                                                    index={index}
+                                                    index={i}
+                                                    key={i}
                                                 />
                                             );
                                         }
