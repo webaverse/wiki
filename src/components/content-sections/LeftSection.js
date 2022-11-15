@@ -6,7 +6,7 @@ import { Gallery } from "../gallery";
 import { ChatBox } from "../chat-box/ChatBox";
 
 export const LeftSection = (props) => {
-    const { title, content, index, editSection, gallery, type } =
+    const { title, content, index, editSection, gallery, type, setChatUsers } =
         props;
     const [editSource, setEditSource] = useState(false);
     const [editedContent, setEditedContent] = useState(content);
@@ -93,6 +93,7 @@ export const LeftSection = (props) => {
                                 content={content}
                                 type={type}
                                 description={description}
+                                setChatUsers={setChatUsers}
                             />
                         ) : (
                             <Markdown gfm openLinksInNewTab={false}>

@@ -227,7 +227,7 @@ const ContentObject = ({ url }) => {
                         <div className={styles.leftContent}>
                             <div className={styles.markdown}>
                                 {sections &&
-                                    sections.map((section, index) => {
+                                    sections.map((section, i) => {
                                         if (
                                             !rightColumn.includes(
                                                 section.title

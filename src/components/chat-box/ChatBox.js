@@ -29,6 +29,9 @@ export const ChatBox = (props) => {
             getChatContentArray(formatedChatContent).then(
                 (chatArrayResponse) => {
                     if (chatArrayResponse) {
+                        //console.log(chatArrayResponse);
+                        //let unique = chatArrayResponse.filter((item, i, ar) => ar.indexOf(item) === i);
+                        //console.log("UNIQUE: ", unique);
                         setChatArray(chatArrayResponse);
                     }
                 }

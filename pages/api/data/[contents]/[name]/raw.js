@@ -19,7 +19,7 @@ export default async function handler(req, res) {
   const query = await c.databaseClient.getByName('Content', title);
 
   if(query) {
-    const {content} = query;
+    const {content: text} = query;
     res.json(query);
   } else {
 

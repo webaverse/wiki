@@ -40,7 +40,7 @@ export const isAllCaps = (name) => {
 };
 
 // Format Images
-export const formatImages = async (md, type) => {
+export const formatImages = async (md, type, provider) => {
     md = md.replace(/\!\[([^\]]*?)\]\(([^\)]*?)\)/g, (all, title, url) => {
         const match = title.match(/^([\s\S]*?)(\|[\s\S]*?)?$/);
         if (match) {
@@ -100,17 +100,17 @@ export const getSectionsContentArray = async (content, query) => {
 export const getChatContentArray = async (content) => {
 
     // Count every new line after "## Chat:" as a new message/item.
-    const regMessages = /\n(.*)\n/g;
+    const regMessages = /-(.*)\n/g;
     // Split name & message by the first ":" in the string.
     const regNameMessage = /:(.*)/s;
     // Match and split notifications by "######" in the string.
-    const regNotifications = /######(.*)/s;
+    const regNotifications = />(.*)/s;
     //
     const chatArray = [];
 
     if (content) {
         let chatItemsArray = content.trim().split(regMessages);
-        console.log("Chat Array: ", chatItemsArray);
+        //console.log("Chat Array: ", chatItemsArray);
         if (chatItemsArray) {
             let nextAuthor;
             let chatItem = {

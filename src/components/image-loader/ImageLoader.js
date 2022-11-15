@@ -20,7 +20,7 @@ export const ImageLoader = ({
             setLoadingProgress("Generating");
             setLoading(true);
             let xmlHTTP = new XMLHttpRequest();
-            console.log(`${url}${reroll ? "?reroll=true" : ""}`);
+            //console.log(`${url}${reroll ? "?reroll=true" : ""}`);
             xmlHTTP.open("GET", `${url}${reroll && "?reroll=true"}`, true);
             xmlHTTP.onprogress = function (pr) {
                 setImageUrl(url);

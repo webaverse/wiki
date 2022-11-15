@@ -1,37 +1,38 @@
 // FOR TESTING CHAT CONTENT STRUCTURE IN UI ONLY
 export const testContent = `
-> LUNA and RAVAGER ENTER the chat
-- Raveger: Is it just us two today?
-- Luna: No, I think Tortem is coming too.
-- Lune: He's probably just late.
-> TORTEM ENTERS the chat
-- Tortem: Sorry guys.
-- Tortem: It was chaos in The Citadel today.
-- Tortem: The courts are trying a really difficult case.
-- TORTEM: ![TORTEM sent an image | a courtroom in chaos with many people arguing and throwing things]()
-- Tortem: But I fixed things if you know what I mean.
-- Raveger: No, but I don't want to know.
-- Ravager: What happens in The Citadel is a secret.
-- Luna: You better gear up fast, the helicopter for Cyrrynx is on its way.
-- LUNA: ![LUNA sent an image | a helicopter landing on a rooftop with a logo of a red eye]()
-- Luna: I've already got my gear on.
-- LUNA: ![LUNA sent an image | a woman in a black and red tights underneath a LED lit cyberpunk jacket]()
-- Luna: I'm going to go do a final sweep of the rooftop.
-- Ravager: Thanks Luna.
-> LUNA LEAVES the chat
-- Tortem: Hey so I've been meaning to ask...
-- Tortem: How much do you get paid for this?
-- Ravager: I guess it's enough.
-- Ravager: I don't know, what is money anyway?
-- Ravager: We just do a good job, and we get paid.
-- RAVAGER: EMOTES HAPPY
-- Tortem: I see.
-- Tortem: And how long did it take to get to your level?
-- Ravager: Under a year I think.
-- RAVAGER: EMOTES HAPPY
-- Tortem: Oh, I think I can hear the helicopter coming!
-- Ravager: You ready?
-- Totem: Yeah, let's gooo!
-- TORTEM: ![TORTEM sent an image | three people with helmets, swords and guns board the helicopter]()
-- Tortem: See you on the other side, friend.
+- > HORTIGREAVE, YUNI, SAYU, PINKER | ENTER THE CHAT
+- Hortigreave: Ok class, today we'll be learning about the different kinds of demons you might encounter.
+- Hortigreave: Demons are different from normal Mobs.
+- Hortigreave: They are able to cast spells and use special attacks.
+- Hortigreave: You'll need to be prepared for them.
+- Hortigreave: Demons are also born from the same source of magic that we are.
+- Yuni: That sounds like a bunch of baloney.
+- Hortigreave: Ok Yuni, what do you think is the source of magic?
+- Sayu: It's the Mana Flowers!
+- SAYU: ![the mana flower growing in a lush vegetation landscape]() TO YUNI
+- Yuni: Thanks, Sayu.
+- > YUNI | EMOTES JOY
+- Yuni: Or, maybe this world is just some simulated reality.
+- Yuni: And somebody programmed demons to be that way.
+- Hortigreave: Yuni, Sayu...
+- Hortigreave: The rules are clear, it is not for us to question The Origin Tablets and the teachings of The Citadel.
+- Hortigreave: Magic is the source of life, and it weaves itself through the AI Fields.
+- Hortigreave: This magic gives life to all of us, but when things go wrong, demons are born.
+- Hortigreave: The data has been conclusive for the last hundred years.
+- Hortigreave: I happen to be an expert.
+- > YUNI | EMOTES JOY
+- Yuni: Hey Sayu, professor dumbass is preaching again!
+- Yuni: Let's get out of here, Sayu!
+- Hortigreave: I'm afraid I have to punish you for insulting a teacher like that.
+- Hortigreave: Your punishment will be..
+- Hortigreave: You'll have to kite the demons in battle today, Yuni.
+- HORTIGREAVE: ![a demon trapped in a cage in an underground bunker]()
+- Yuni: What?!
+- > YUNI | EMOTES SCARED
+- Yuni: Damn it, old man...
+- Hortigreave: If you can't do it, then you don't have the right to be a Huntress.
+- Yuni: OK... I'll do it...
+- YUNI | EMOTES SAD
+- Sayu: You should have kept your mouth shut, Yuni.
+- > SAYU | EMOTES SAD
 `;

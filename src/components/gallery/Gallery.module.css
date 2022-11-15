@@ -3,6 +3,7 @@
     margin: 0;
     padding: 0;
     margin-bottom: 8px;
+    width: 100%;
 }
 .galleryWrap .galleryItem {
     display: block;

@@ -14,7 +14,7 @@ export const MessageBox = (props) => {
     const isNxtMsgFrmSameAuthor = nextAuthor === author;
     const isPrvMsgFrmSameAuthor = prevAuthor === author;
     // Check if the message is an image
-    console.log("Message: ", isNxtMsgFrmSameAuthor, isPrvMsgFrmSameAuthor);
+    //console.log("Message: ", isNxtMsgFrmSameAuthor, isPrvMsgFrmSameAuthor);
     const isImageMessage = message?.match(/\!\[([^\]]*?)\]\(([^\)]*?)\)/g);
 
     return (
