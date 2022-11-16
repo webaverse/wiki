@@ -1,8 +1,11 @@
-import stream from "stream";
 import { Ctx } from "../../../../clients/context.js";
 import { getDatasetSpecs } from "../../../../datasets/dataset-specs.js";
 import { cleanName } from "../../../../utils.js";
 import { generateImage } from "../../../../media/images/image-generator.js";
+
+// remove the stream and blob imports when node is upgraded to 18 and above
+import stream from "stream";
+import { Blob } from "buffer";
 
 //
 
@@ -17,15 +20,21 @@ const CharacterImage = async (req, res) => {
         const { imgUrl } = props;
 
         const proxyRes = await fetch(imgUrl);
-        
+
+        console.log("IMAGE: ", imgUrl);
+
         // proxy the status and headers
         res.status(proxyRes.status);
         for (const [key, value] of proxyRes.headers.entries()) {
             res.setHeader(key, value);
         }
         // pipe the response
-        // console.log('got body', proxyRes.body);
-        stream.Readable.fromWeb(proxyRes.body).pipe(res);
+        console.log("got body", proxyRes.body);
+
+        // remove and use " Readable.fromWeb(proxyRes.body).pipe(res); "  
+        // when node is upgraded to 18 and above
+        stream.Readable.from(proxyRes.body).pipe(res);
+        
     } else {
         res.send(404);
     }
