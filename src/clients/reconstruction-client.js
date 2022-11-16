@@ -5,7 +5,7 @@ export const skyboxDistance = 5;
 export const skyboxScaleFactor = 5;
 export const pointcloudStride = 4 + 4 + 4 + 1 + 1 + 1;
 
-export function pointCloudArrayBuffer2canvas(arrayBuffer) {
+export function drawPointCloudCanvas(arrayBuffer) {
   // python_types = (float, float, float, int, int, int)
   // npy_types = [('x', 'f4'), ('y', 'f4'), ('z', 'f4'), ('red', 'u1'), ('green', 'u1'), ('blue', 'u1')]
   const numPixels = arrayBuffer.byteLength / pointcloudStride;
@@ -121,17 +121,10 @@ export const labelColors = (() => {
   }
   return result;
 })();
-export function pointCloudArrayBufferToColorAttributeArray(labelImg, uint8Array) { // result in uint8Array
-  // extract image data from labelImg
-  const imageData = (() => {
-    const canvas = document.createElement('canvas');
-    canvas.width = labelImg.width;
-    canvas.height = labelImg.height;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(labelImg, 0, 0);
-    return ctx.getImageData(0, 0, canvas.width, canvas.height);
-  })();
-  // console.log('got data', imageData);
+export function pointCloudArrayBufferToColorAttributeArray(labelImageData, uint8Array) { // result in uint8Array
+  const imageData = {
+    data: new Uint8Array(labelImageData),
+  };
 
   const usedLabelColors = new Set();
   // write to the color attribute buffer (RGB)

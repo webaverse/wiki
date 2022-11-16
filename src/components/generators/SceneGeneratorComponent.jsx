@@ -1,14 +1,10 @@
 // import * as THREE from 'three';
-import {useState, useRef} from 'react';
-import {prompts} from '../../constants/prompts.js';
-import {SceneGenerator} from '../../generators/scene-generator.js';
+import {useState, useEffect} from 'react';
+import {Storyboard} from '../../generators/scene-generator.js';
+import {StoryboardComponent} from './StoryboardComponent.jsx';
+import {StoryboardRendererComponent} from './StoryboardRendererComponent.jsx';
 
-import styles from '../../../styles/Gen.module.css';
-import {useEffect} from 'react';
-
-//
-
-const sceneGenerator = new SceneGenerator();
+import styles from '../../../styles/SceneGenerator.module.css';
 
 //
 
@@ -21,143 +17,79 @@ const sceneGenerator = new SceneGenerator();
 
 //
 
-const Storyboard = () => {
-  const [items, setItems] = useState([]);
-
-  return (
-    <div className={styles.storyboard}>
-      {items.map(item => (
-        <div className={styles.storyboardItem}>
-          <img src={item} />
-        </div>
-      ))}
-    </div>
-  )
-};
-
-//
-
-const _sizeFile = async file => {
-  // read the image
-  const image = await new Promise((accept, reject) => {
-    const img = new Image();
-    img.onload = () => {
-      accept(img);
-      cleanup();
-    };
-    img.onerror = err => {
-      reject(err);
-      cleanup();
-    };
-    img.crossOrigin = 'Anonymous';
-    const u = URL.createObjectURL(file);
-    img.src = u;
-    const cleanup = () => {
-      URL.revokeObjectURL(u);
-    };
-  });
-
-  // if necessary, resize the image via contain mode
-  if (image.width !== 1024 || image.height !== 1024) {
-    const canvas = document.createElement('canvas');
-    canvas.width = 1024;
-    canvas.height = 1024;
-    const ctx = canvas.getContext('2d');
-    // ctx.fillStyle = 'white';
-    // ctx.fillRect(0, 0, 1024, 1024);
-    const sx = Math.max(0, (image.width - image.height) / 2);
-    const sy = Math.max(0, (image.height - image.width) / 2);
-    const sw = Math.min(image.width, image.height);
-    const sh = Math.min(image.width, image.height);
-    ctx.drawImage(image, sx, sy, sw, sh, 0, 0, 1024, 1024);
-    file = await new Promise((accept, reject) => {
-      canvas.toBlob(blob => {
-        accept(blob);
-      });
-    });
-  }
-  return file;
-};
 const SceneGeneratorComponent = () => {
-  const [step, setStep] = useState(1);
-  const [prompt, setPrompt] = useState(prompts.world);
-  const [sceneRenderer, setSceneRenderer] = useState(null);
-  const [busy, setBusy] = useState(false);
+  const [storyboard, setStoryboard] = useState(() => new Storyboard());
+  const [panel, setPanel] = useState(null);
+  const [panels, setPanels] = useState([]);
 
-  const canvasRef = useRef();
-
-  const _addPanel = async file => {
-    setBusy(true);
-    try {
-      file = await _sizeFile(file);
-      const scenePackage = await sceneGenerator.generate(prompt, file);
-
-      const sceneRenderer = sceneGenerator.createRenderer(canvasRef.current);
-      sceneRenderer.setPackage(scenePackage);
-
-      setSceneRenderer(sceneRenderer);
-      setStep(2);
-    } finally {
-      setBusy(false);
-    }
-  };
   useEffect(() => {
-    const dragover = e => {
-      e.preventDefault();
-      e.stopPropagation();
+    const paneladd = e => {
+      setPanels(storyboard.panels.slice());
     };
-    document.addEventListener('dragover', dragover);
-    const drop = async e => {
-      e.preventDefault();
-      e.stopPropagation();
-      const files = e.dataTransfer.files;
-      const file = files[0];
-      if (file) {
-        await _addPanel(file);
+    storyboard.addEventListener('paneladd', paneladd);
+    const panelremove = e => {
+      const oldPanels = panels;
+      const newPanels = storyboard.panels.slice();
+      setPanels(newPanels);
+
+      if (panel === e.data.panel) {
+        // select the next panel, if there is one
+        if (newPanels.length > 0) {
+          setPanel(newPanels[Math.min(oldPanels.indexOf(panel), newPanels.length - 1)]);
+        } else {
+          setPanel(null);
+        }
       }
     };
-    document.addEventListener('drop', drop);
-    const keydown = e => {
-      if (!e.repeat) {
-        console.log('got key', e.key);
-        switch (e.key) {
-          case ' ': {
-            if (step === 2) {
-              e.preventDefault();
-              e.stopPropagation();
+    storyboard.addEventListener('panelremove', panelremove);
 
-              sceneRenderer.renderBackground();
-            }
-            break;
-          }
+    const keydown = e => {
+      if (e.key === 'Delete') {
+        if (panel) {
+          e.preventDefault();
+          e.stopPropagation();
+
+          storyboard.removePanel(panel);
         }
       }
     };
     document.addEventListener('keydown', keydown);
 
     return () => {
-      document.removeEventListener('dragover', dragover);
-      document.removeEventListener('drop', drop);
+      storyboard.removeEventListener('paneladd', paneladd);
+      storyboard.removeEventListener('panelremove', panelremove);
       document.removeEventListener('keydown', keydown);
     };
-  }, [sceneRenderer]);
+  }, [storyboard, panel, panels]);
+
+  const onPanelSelect = panel => {
+    setPanel(panel);
+  };
+  const onPanelsLoad = newPanelDatas => {
+    const oldPanels = panels;
+    for (const panel of oldPanels) {
+      storyboard.removePanel(panel);
+    }
+    const newPanels = newPanelDatas.map(panelData => storyboard.addPanel(panelData));
+    if (newPanels.length > 0) {
+      setPanel(newPanels[0]);
+    }
+  };
 
   return (
-    <div className={styles.generator}>
-      <input type="text" className={styles.input} value={prompt} onChange={e => {
-        setPrompt(e.target.value);
-      }} placeholder={prompts.character} disabled={busy} />
-        <div className={styles.button} onClick={async () => {
-          await sceneGenerator.generate(prompt);
-        }} disabled={busy}>Generate</div>
-      <div>or, <a className={styles.fileUpload}><input type="file" onChange={async e => {
-        const file = e.target.files[0];
-        if (file) {
-          await _addPanel(file);
-        }
-      }} />Upload File</a></div>
-      <div>or, <b>Drag and Drop</b></div>
-      <div className={styles.canvasWrap} ref={canvasRef} />
+    <div className={styles.sceneGenerator}>
+      <StoryboardRendererComponent
+        storyboard={storyboard}
+        panel={panel}
+        onPanelSelect={onPanelSelect}
+      />
+      <StoryboardComponent
+        storyboard={storyboard}
+        panel={panel}
+        panels={panels}
+        onPanelSelect={onPanelSelect}
+        onPanelsLoad={onPanelsLoad}
+      />
     </div>
   );
 };
