@@ -13,7 +13,7 @@ import {
 import { generateItem } from "../../datasets/dataset-generator.js";
 import { formatItemText } from "../../datasets/dataset-parser.js";
 import { getDatasetSpecs } from "../../datasets/dataset-specs.js";
-import React, { useState } from "react";
+import React, { useState, useContext, createContext } from "react";
 import { UserBox } from "../../src/components/user-box/UserBox";
 import { EditSource } from "../../src/components/edit-source";
 import {
@@ -24,6 +24,8 @@ import { MiniMap } from "../../src/components/mini-map/MiniMap";
 import { ImageLoader } from "../../src/components/image-loader/ImageLoader";
 import { MetaTags } from "../../src/components/meta-tags/MetaTags";
 
+
+import { AccountContext } from '../../src/hooks/web3AccountProvider'
 //
 
 const rightColumn = [
@@ -38,6 +40,8 @@ const rightColumn = [
 
 const hideSections = ["Name", "Class", "Image"];
 
+const ContentObjectContext = createContext();
+
 //
 
 const ContentObject = ({ type, title, content }) => {
@@ -50,6 +54,8 @@ const ContentObject = ({ type, title, content }) => {
     const [sections, setSections] = useState([]);
     const [editSource, setEditSource] = useState(false);
     const [formatedContent, setFormatedContent] = useState();
+
+    const account = useContext(AccountContext);
 
     React.useEffect(() => {
         if (content) {
@@ -112,117 +118,118 @@ const ContentObject = ({ type, title, content }) => {
     };
 
     return (
-        <div className={styles.character}>
-            <MetaTags
-                title={`${itemName} ${itemClass && `- ${itemClass}`}`}
-                description={description}
-                image={featuredImage}
-            />
-            <UserBox />
-            <img
-                src={"/assets/logo.svg"}
-                className={styles.logo}
-                alt="Webaverse Wiki"
-            />
-            <div className={styles.contentWrap}>
-                <div className={styles.name}>
-                    <span>{`${type}s`}</span>
-                    {itemName}
+        <ContentObjectContext.Provider value={{ account }}>
+            <div className={styles.character}>
+                <MetaTags
+                    title={`${itemName} ${itemClass && `- ${itemClass}`}`}
+                    description={description}
+                    image={featuredImage}
+                />
+                <UserBox />
+                <img
+                    src={"/assets/logo.svg"}
+                    className={styles.logo}
+                    alt="Webaverse Wiki"
+                />
+                <div className={styles.contentWrap}>
+                    <div className={styles.name}>
+                        <span>{`${type}s`}</span>
+                        {itemName}
+                        {!editSource ? (
+                            <div className={styles.sourceActions}>
+                                <div
+                                    className={styles.edit}
+                                    onClick={editContentSource}
+                                >
+                                    <img
+                                        src={"/assets/edit-source-lock.svg"}
+                                        className={styles.icon}
+                                    />
+                                    Edit Source
+                                </div>
+                            </div>
+                        ) : (
+                            <div className={styles.sourceActions}>
+                                <div className={styles.back} onClick={backToPage}>
+                                    <img
+                                        src={"/assets/arrowBack.svg"}
+                                        className={styles.iconBack}
+                                    />
+                                    Back to Page
+                                </div>
+                                <button className={styles.button}>Save</button>
+                            </div>
+                        )}
+                    </div>
                     {!editSource ? (
-                        <div className={styles.sourceActions}>
-                            <div
-                                className={styles.edit}
-                                onClick={editContentSource}
-                            >
-                                <img
-                                    src={"/assets/edit-source-lock.svg"}
-                                    className={styles.icon}
-                                />
-                                Edit Source
+                        <React.Fragment>
+                            <div className={styles.rightContent}>
+                                <div className={styles.title}>{itemName}</div>
+                                {itemClass && (
+                                    <div className={styles.subtitle}>
+                                        {itemClass}
+                                    </div>
+                                )}
+                                <div className={styles.previewImageWrap}>
+                                    <img
+                                        src={"/assets/image-frame.svg"}
+                                        className={styles.frame}
+                                    />
+                                    <div className={styles.mask}>
+                                        <ImageLoader
+                                            url={featuredImage}
+                                            className={styles.image}
+                                            rerollable={true}
+                                        />
+                                    </div>
+                                </div>
+                                <div>
+                                    {sections &&
+                                        sections.map((section, i) => {
+                                            if (rightColumn.includes(section.title))
+                                                return (
+                                                    <RightSection
+                                                        title={section.title}
+                                                        content={section.content}
+                                                        index={i}
+                                                    />
+                                                );
+                                        })}
+                                    <MiniMap coordinates={""} />
+                                </div>
                             </div>
-                        </div>
+                            <div className={styles.leftContent}>
+                                <div className={styles.markdown}>
+                                    {sections &&
+                                        sections.map((section, i) => {
+                                            if (
+                                                !rightColumn.includes(
+                                                    section.title
+                                                ) &&
+                                                !hideSections.includes(
+                                                    section.title
+                                                )
+                                            ) {
+                                                return (
+                                                    <LeftSection
+                                                        title={section.title}
+                                                        content={section.content}
+                                                        editSection={editSection}
+                                                        gallery={gallery}
+                                                        index={i}
+                                                    />
+                                                );
+                                            }
+                                        })}
+                                </div>
+                            </div>
+                        </React.Fragment>
                     ) : (
-                        <div className={styles.sourceActions}>
-                            <div className={styles.back} onClick={backToPage}>
-                                <img
-                                    src={"/assets/arrowBack.svg"}
-                                    className={styles.iconBack}
-                                />
-                                Back to Page
-                            </div>
-                            <button className={styles.button}>Save</button>
-                        </div>
+                        <EditSource content={content} />
                     )}
                 </div>
-                {!editSource ? (
-                    <React.Fragment>
-                        <div className={styles.rightContent}>
-                            <div className={styles.title}>{itemName}</div>
-                            {itemClass && (
-                                <div className={styles.subtitle}>
-                                    {itemClass}
-                                </div>
-                            )}
-                            <div className={styles.previewImageWrap}>
-                                <img
-                                    src={"/assets/image-frame.svg"}
-                                    className={styles.frame}
-                                />
-                                <div className={styles.mask}>
-                                    <ImageLoader
-                                        url={featuredImage}
-                                        className={styles.image}
-                                        rerollable={true}
-                                    />
-                                </div>
-                            </div>
-                            <div>
-                                {sections &&
-                                    sections.map((section, i) => {
-                                        if (rightColumn.includes(section.title))
-                                            return (
-                                                <RightSection
-                                                    title={section.title}
-                                                    content={section.content}
-                                                    index={i}
-                                                />
-                                            );
-                                    })}
-                                <MiniMap coordinates={""} />
-                            </div>
-                        </div>
-                        <div className={styles.leftContent}>
-                            <div className={styles.markdown}>
-                                {sections &&
-                                    sections.map((section, i) => {
-                                        if (
-                                            !rightColumn.includes(
-                                                section.title
-                                            ) &&
-                                            !hideSections.includes(
-                                                section.title
-                                            )
-                                        ) {
-                                            return (
-                                                <LeftSection
-                                                    title={section.title}
-                                                    content={section.content}
-                                                    editSection={editSection}
-                                                    gallery={gallery}
-                                                    index={i}
-                                                    key={i}
-                                                />
-                                            );
-                                        }
-                                    })}
-                            </div>
-                        </div>
-                    </React.Fragment>
-                ) : (
-                    <EditSource content={content} />
-                )}
             </div>
-        </div>
+        </ContentObjectContext.Provider>
     );
 };
 
