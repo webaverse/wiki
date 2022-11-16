@@ -17,8 +17,8 @@ function MyApp({ Component, pageProps }) {
 
     useEffect(() => {
         if (url) {
-            fetchContent(url, "json").then((res) => {
-                //console.log("FETCHED: ", res);
+            fetchContent(url).then((res) => {
+                console.log("FETCHED: ", res);
                 setContent(res?.content);
                 setEditableContent(res?.content);
                 setTitle(res?.title);
@@ -28,7 +28,7 @@ function MyApp({ Component, pageProps }) {
     }, [url]);
 
     const rerollSection = (sectionName) => {
-      
+
     };
 
     const rerollAllSections = () => {

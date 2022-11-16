@@ -13,7 +13,7 @@ import {
 import { generateItem } from "../../datasets/dataset-generator.js";
 import { formatItemText } from "../../datasets/dataset-parser.js";
 import { getDatasetSpecs } from "../../datasets/dataset-specs.js";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { UserBox } from "../../src/components/user-box/UserBox";
 import { EditSource } from "../../src/components/edit-source";
 import {
@@ -24,6 +24,7 @@ import { MiniMap } from "../../src/components/mini-map/MiniMap";
 import { ImageLoader } from "../../src/components/image-loader/ImageLoader";
 import { MetaTags } from "../../src/components/meta-tags/MetaTags";
 import { fetchContent } from "../../src/utils/api";
+import { WikiContext } from "../_app";
 
 //
 
@@ -56,12 +57,16 @@ const ContentObject = ({ url }) => {
     const [data, setData] = useState();
     const [loading, setLoading] = useState();
 
+    const { setUrl } = useContext(WikiContext);
+
     React.useEffect(() => {
         setLoading(true);
             fetchContent(url).then((data) => {
                 setData(data);
                 setLoading(false);
             });
+
+            setUrl(url);
     }, [url]);
 
     React.useEffect(() => {
@@ -210,14 +215,15 @@ const ContentObject = ({ url }) => {
                             )}
                             <div>
                                 {sections &&
-                                    sections.map((section, index) => {
+                                    sections.map((section, i) => {
                                         if (rightColumn.includes(section.title))
                                             return (
                                                 <RightSection
                                                     title={section.title}
                                                     content={section.content}
                                                     type={data?.type}
-                                                    index={index}
+                                                    index={i}
+                                                    key={i}
                                                 />
                                             );
                                     })}

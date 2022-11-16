@@ -29,6 +29,7 @@ export default async function handler(req, res) {
     if (query) {
         const { content, title, type } = query;
         res.json(query);
+        console.log("AAAAAAAAAA");
     } else {
         const c = new Ctx();
         const [datasetSpecs, generatedItem] = await Promise.all([
@@ -38,24 +39,22 @@ export default async function handler(req, res) {
         const datasetSpec = datasetSpecs.find((ds) => ds.type === type);
         const itemText = formatItemText(generatedItem, datasetSpec);
 
+        console.log("CONTENT: ", itemText);
+
         const content = `\
 ${itemText}
 `;
-        const contentSaved = c.databaseClient.setByName(
+        await c.databaseClient.setByName(
             "Content",
             title,
             content
         );
 
-        if (contentSaved) {
-            res.json({
-                id,
-                type,
-                title,
-                content,
-            });
-        } else {
-            res.send(404);
-        }
+        res.json({
+            id,
+            type,
+            title,
+            content,
+        });
     }
 }
