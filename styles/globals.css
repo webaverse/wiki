@@ -57,9 +57,12 @@ a {
   }
   body,html {
     color: #FFFFFF;
-    background-image: url('/assets/main-background.jpg');
-    background-position: center top;
-    background-size: cover;
-    background-repeat: no-repeat;
+    background-image: url('/assets/main-background.jpg') !important;
+    background-position: center top !important;
+    background-size: cover !important;
+    background-repeat: no-repeat !important;
+    height: 100vh !important;
+    overflow-y: scroll !important;
+    overflow-x: hidden !important;
   }
 }
