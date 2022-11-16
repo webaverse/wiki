@@ -6,9 +6,6 @@
   padding: 100px 0 80px 0;
   font-size: 14px;
 }
-.character * {
-  position: relative;
-}
 .character .logo {
   height: 60px;
   position: absolute;

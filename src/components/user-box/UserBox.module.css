@@ -2,7 +2,7 @@
   height: 34px;
   background-color: #0d1a22;
   min-width: 40px;
-  position: absolute;
+  position: absolute !important;
   top: 32px;
   right: 40px;
   z-index: 2;
