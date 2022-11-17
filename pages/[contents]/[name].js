@@ -75,7 +75,7 @@ const ContentObject = ({ url }) => {
         editableContent,
         isContentEdited,
         saveInProgress,
-        resetChanges
+        resetChanges,
     } = useContext(WikiContext);
 
     React.useEffect(() => {
@@ -128,11 +128,16 @@ const ContentObject = ({ url }) => {
             )[0]?.content;
             if (imageContent) {
                 const match = imageContent.match(/(?<=\().+?(?=\))/g);
+                console.log(match);
                 if (match) {
-                    setFeaturedImage(match[0] + ".png");
+                    setFeaturedImage(
+                            `${window.location.origin}${encodeURIComponent(`${match[0]}.png`)}`
+                     
+                    );
                 } else {
                     setFeaturedImage(
-                        `/api/images/${type}s/${imageContent}.png`
+                            `${window.location.origin}/api/images/${type}s/${encodeURIComponent(imageContent)}.png`
+                     
                     );
                 }
             } else {
@@ -338,25 +343,25 @@ const ContentObject = ({ url }) => {
                 </div>
             </div>
             {isContentEdited && (
-            <div className={styles.saveEditedContentWrap}>
-                <CustomButton
-                    theme="dark"
-                    icon="check"
-                    text={saveInProgress ? "Saving..." : "Save Changes"}
-                    size={14}
-                    className={styles.methodButton}
-                    onClick={() => !saveInProgress && saveContent()}
-                />
-                <CustomButton
-                    theme="dark"
-                    icon="close"
-                    text="Cancel"
-                    size={14}
-                    disabled={saveInProgress ? true : false}
-                    className={styles.methodButton}
-                    onClick={() => !saveInProgress && resetChanges()}
-                />
-            </div>
+                <div className={styles.saveEditedContentWrap}>
+                    <CustomButton
+                        theme="dark"
+                        icon="check"
+                        text={saveInProgress ? "Saving..." : "Save Changes"}
+                        size={14}
+                        className={styles.methodButton}
+                        onClick={() => !saveInProgress && saveContent()}
+                    />
+                    <CustomButton
+                        theme="dark"
+                        icon="close"
+                        text="Cancel"
+                        size={14}
+                        disabled={saveInProgress ? true : false}
+                        className={styles.methodButton}
+                        onClick={() => !saveInProgress && resetChanges()}
+                    />
+                </div>
             )}
         </SkeletonTheme>
     );

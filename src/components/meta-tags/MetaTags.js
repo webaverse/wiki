@@ -3,6 +3,7 @@ import React from "react";
 
 export const MetaTags = (props) => {
     const { title, description, image, url } = props;
+    console.log(image);
     return (
         <Head>
             <title>{title}</title>
@@ -14,7 +15,7 @@ export const MetaTags = (props) => {
             <meta itemprop="image" content={image} />
 
             {/* Twitter Card data */}
-            <meta name="twitter:card" content="summary_large_image" />
+            <meta name="twitter:card" content={image} />
             <meta name="twitter:site" content="@webaverse" />
             <meta name="twitter:title" content={title} />
             <meta name="twitter:description" content={description} />
@@ -26,7 +27,7 @@ export const MetaTags = (props) => {
             {/* Open Graph data */}
             <meta property="og:title" content={title} />
             <meta property="og:type" content="article" />
-            <meta property="og:url" content={url} />
+            <meta property="og:url" content={window.location.origin} />
             <meta property="og:image" content={image} />
             <meta property="og:description" content={description} />
             <meta property="og:site_name" content="Webaverse Wiki" />

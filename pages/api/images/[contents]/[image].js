@@ -21,7 +21,7 @@ const CharacterImage = async (req, res) => {
 
         const proxyRes = await fetch(imgUrl);
 
-        // console.log("IMAGE: ", imgUrl);
+        console.log("IMAGE: ", imgUrl);
 
         // proxy the status and headers
         res.status(proxyRes.status);
