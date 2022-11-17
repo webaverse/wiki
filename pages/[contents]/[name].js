@@ -162,16 +162,32 @@ const ContentObject = ({ url }) => {
 
     //if (loading) return <p>Loading...</p>;
     //if (!data) return <p>No profile data</p>;
-
+    const title = `${itemName} - ${itemClass}`;
     return (
         <SkeletonTheme baseColor="#203544" highlightColor="#264051">
             <div className={styles.character}>
-                <MetaTags
-                    title={`${itemName} ${itemClass && `- ${itemClass}`}`}
-                    description={description}
-                    image={featuredImage}
-                    url={originUrl}
-                />
+            <Head>
+            <title>{title}</title>
+            <meta name="description" content={description} />
+
+            <meta itemprop="name" content={title} />
+            <meta itemprop="description" content={description} />
+            <meta itemprop="image" content={featuredImage} />
+
+            <meta
+                property="og:url"
+                content={`${originUrl}${url}`}
+            />
+            <meta property="og:type" content="website" />
+            <meta property="og:title" content={title} />
+            <meta property="og:description" content={description} />
+            <meta property="og:image" content={featuredImage} />
+
+            <meta name="twitter:card" content="summary_large_image" />
+            <meta name="twitter:title" content={featuredImage} />
+            <meta name="twitter:description" content={description} />
+            <meta name="twitter:image" content={featuredImage} />
+        </Head>
                 <UserBox />
                 <img
                     src={"/assets/logo.svg"}
