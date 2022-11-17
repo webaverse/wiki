@@ -26,6 +26,11 @@ import { MetaTags } from "../../src/components/meta-tags/MetaTags";
 import { fetchContent } from "../../src/utils/api";
 import { WikiContext } from "../_app";
 
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
+import { LeftSkeleton } from "../../src/components/content-sections/LeftSkeleton";
+import { RightSkeleton } from "../../src/components/content-sections/RightSkeleton";
+
 //
 
 const rightColumn = [
@@ -139,10 +144,11 @@ const ContentObject = ({ url }) => {
         saveContent();
     };
 
-    if (loading) return <p>Loading...</p>;
-    if (!data) return <p>No profile data</p>;
+    //if (loading) return <p>Loading...</p>;
+    //if (!data) return <p>No profile data</p>;
 
     return (
+        <SkeletonTheme baseColor="#203544" highlightColor="#264051">
         <div className={styles.character}>
             <MetaTags
                 title={`${itemName} ${itemClass && `- ${itemClass}`}`}
@@ -155,10 +161,11 @@ const ContentObject = ({ url }) => {
                 className={styles.logo}
                 alt="Webaverse Wiki"
             />
+
             <div className={styles.contentWrap}>
                 <div className={styles.name}>
-                    <span>{`${data?.type}s`}</span>
-                    {itemName}
+                    <span className={styles.type}>{loading ? <Skeleton width={100} /> : `${data?.type}s` }</span>
+                    <h1>{loading ? <Skeleton width={"50%"} /> : itemName }</h1>
                     {!editSource ? (
                         <div className={styles.sourceActions}>
                             <div
@@ -191,13 +198,14 @@ const ContentObject = ({ url }) => {
                             {data?.type !== "chat" && (
                                 <>
                                     <div className={styles.title}>
-                                        {itemName}
+                                        {loading ? <Skeleton width={100} /> : itemName}
                                     </div>
                                     {itemClass && (
                                         <div className={styles.subtitle}>
                                             {itemClass}
                                         </div>
                                     )}
+                                    {loading ? (<Skeleton height={220} style={{marginBottom: "8px"}} />) : (
                                     <div className={styles.previewImageWrap}>
                                         <img
                                             src={"/assets/image-frame.svg"}
@@ -211,8 +219,12 @@ const ContentObject = ({ url }) => {
                                             />
                                         </div>
                                     </div>
+                                    )}
                                 </>
                             )}
+                            {loading ? (
+                                <RightSkeleton />
+                            ) : (
                             <div>
                                 {sections &&
                                     sections.map((section, i) => {
@@ -223,14 +235,19 @@ const ContentObject = ({ url }) => {
                                                     content={section.content}
                                                     type={data?.type}
                                                     index={i}
+                                                    loading={loading}
                                                     key={i}
                                                 />
                                             );
                                     })}
                                 <MiniMap coordinates={""} />
                             </div>
+                            )}
                         </div>
                         <div className={styles.leftContent}>
+                        {loading ? (
+                                <LeftSkeleton />
+                            ) : (
                             <div className={styles.markdown}>
                                 {sections &&
                                     sections.map((section, i) => {
@@ -256,6 +273,7 @@ const ContentObject = ({ url }) => {
                                         }
                                     })}
                             </div>
+                            )}
                         </div>
                     </React.Fragment>
                 ) : (
@@ -263,6 +281,7 @@ const ContentObject = ({ url }) => {
                 )}
             </div>
         </div>
+        </SkeletonTheme>
     );
 };
 

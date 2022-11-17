@@ -5,7 +5,7 @@ import classnames from "classnames";
 import CustomIcon from "../custom-icons";
 
 export default function CustomButton(props) {
-    const { size, icon, className, onClick, theme, type, text, onMouseEnter } = props;
+    const { size, icon, className, onClick, theme, type, text, onMouseEnter, content } = props;
     if (type && type === "login") {
         return (
             <div
@@ -39,6 +39,7 @@ export default function CustomButton(props) {
                     />
                 </svg>
                 <CustomIcon icon={icon} className={styles.iconWrap} />
+                { content && content}
             </div>
         );
     } else if (type && type === "icon") {
@@ -75,6 +76,7 @@ export default function CustomButton(props) {
                     />
                 </svg>
                 <CustomIcon icon={icon} className={styles.iconWrap} />
+                { content && content}
             </div>
         );
     } else {
@@ -97,6 +99,7 @@ export default function CustomButton(props) {
                     )}
                     {text && text}
                 </div>
+                { content && content}
             </button>
         );
     }

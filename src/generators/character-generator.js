@@ -103,6 +103,7 @@ export class CharacterGenerator {
       [0, -0.5],
       [0, 0.5],
     ]);
-    element.appendChild(outpaintedCanvas);
+    //element.prepend(outpaintedCanvas);
+    return outpaintedCanvas;
   }
 };

@@ -3,10 +3,14 @@
   height: inherit;
 }
 .storyboardGenerator .input {
-  min-width: 800px;
+  width: 514px;
   margin-right: 30px;
   padding: 10px;
   font-size: 24px;
+  border: 2px solid #1e3747;
+  background: none;
+  font-size: 18px;
+  color: #b7c5ca;
 }
 .storyboardGenerator .button {
   display: inline-block;
@@ -19,4 +23,33 @@
   color: #FFF;
   background-color: #000;
   border-color: #000;
+}
+
+.storyboardGenerator .uploadWrap {
+  display: flex;
+  width: inherit;
+  height: inherit;
+  margin-top: 16px;
+  height: 400px;
+  border: 2px dashed #1e3747;
+  width: 514px;
+  position: relative; 
+}
+
+.storyboardGenerator .uploadOptions {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  color: #88989e;
+  text-align: center;
+}
+.storyboardGenerator .uploadOptions h3 {
+  margin-bottom: 4px;
+  margin-top: 0;
+}
+.storyboardGenerator .uploadOptions p {
+  margin: 4px 0;
+  padding: 0;
+  color: #264457;
 }

@@ -1,5 +1,37 @@
 .storyboard3DRenderer {
-  
+  position: relative;
+}
+
+.storyboard3DRenderer .canvasWrap {
+  margin-top: 16px;
+  display: inline-block;
+  background-color: #091319;
+}
+
+.storyboard3DRenderer .infoBox {
+  position: absolute;
+  top: 62px;
+  left: 548px;
+  color: #b7c5ca;
+}
+
+.storyboard3DRenderer .infoBox .layer {
+  margin-bottom: 4px;
+  display: list-item;
+  margin-left: 14px;
+  list-style: circle;
+}
+
+.storyboard3DRenderer .status {
+  color: #64ce0d;
+  margin-bottom: 8px;
+  font-size: 18px;
+}
+
+
+.storyboard3DRenderer .canvasWrap canvas {
+  border: 2px solid #1e3747;
+  zoom: 0.5;
 }
 
 /* */
@@ -7,7 +39,6 @@
 .storyboard3DRenderer .header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
 }
 .storyboard3DRenderer .header .button {
   display: inline-block;
@@ -25,7 +56,12 @@
 /* */
 
 .storyboard3DRenderer .header input[type="text"] {
-  min-width: 500px;
+  width: 514px;
+  margin-right: 30px;
   padding: 10px;
-  font-size: 24px;
+  border: 2px solid #1e3747;
+  background: none;
+  font-size: 18px;
+  color: #b7c5ca;
+  outline: none;
 }

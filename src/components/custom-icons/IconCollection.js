@@ -82,5 +82,33 @@ export const IconCollection = [
     {
         name: 'vitality',
         file: "/assets/icons/vitality.svg"
+    },
+    {
+        name: 'download',
+        file: "/assets/icons/download.svg"
+    },
+    {
+        name: 'upload',
+        file: "/assets/icons/upload.svg"
+    },
+    {
+        name: 'plus',
+        file: "/assets/icons/plus.svg"
+    },
+    {
+        name: 'image',
+        file: "/assets/icons/image.svg"
+    },
+    {
+        name: 'ai',
+        file: "/assets/icons/ai.svg"
+    },
+    {
+        name: 'arrowLeft',
+        file: "/assets/icons/arrowLeft.svg"
+    },
+    {
+        name: 'arrowRight',
+        file: "/assets/icons/arrowRight.svg"
     }
 ]
