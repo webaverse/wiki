@@ -1,0 +1,66 @@
+
+.chatAvatarWrap {
+    zoom: 1;
+    float: left;
+    width: 34px;
+    margin-top: 3px;
+    margin-right: 18px;
+    min-height: 2px;
+    position: absolute;
+}
+.test {
+    width: 60px;
+    opacity: 0.05;
+    height: 37px;
+    position: absolute;
+    right: 40px;
+    transform: skewX(6deg);
+    top: -4px;
+    background-color: #bcc3c7;
+    background: rgb(22,37,48);
+background: linear-gradient(10deg, rgba(22,37,48,1) 0%, rgba(40,52,63,1) 100%);
+}
+.chatAvatarWrap .avatarImageWrap {
+    width: 34px;
+    height: 30px;
+    position: relative;
+}
+.chatAvatarWrap .avatarImageWrap .frame {
+    height: 120%;
+    width: 120%;
+    top: -10%;
+    left: -10%;
+    opacity: 0.1;
+}
+.chatAvatarWrap .avatarImageWrap .mask {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    -webkit-mask-image: url("/assets/avatar-frame-left.svg");
+    mask-image: url("/assets/avatar-frame-left.svg");
+    -webkit-mask-size: 100%;
+    mask-size: 100%;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    position: absolute;
+    z-index: 10;
+}
+.chatAvatarWrap .avatarImageWrap .mask.right {
+    -webkit-mask-image: url("/assets/avatar-frame-right.svg");
+    mask-image: url("/assets/avatar-frame-right.svg");
+    width: 43px;
+    height: 42px;
+    top: 2px;
+    left: 2px;
+}
+.chatAvatarWrap .avatarImageWrap .image {
+    width: 100%;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translateX(-50%) translateY(-50%);
+    -webkit-transform: translateX(-50%) translateY(-50%);
+    transform: translateX(-50%) translateY(-50%);
+    position: absolute;
+}

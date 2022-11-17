@@ -1,112 +1,124 @@
-import {useState, useRef, useEffect} from 'react';
+import { useState, useRef, useEffect } from "react";
 
-import {panelSize, layer1Specs} from '../../generators/scene-generator.js';
-import styles from '../../../styles/Storyboard3DRenderer.module.css';
-
-//
-
-import {promptKey} from '../../generators/scene-generator.js';
+import { panelSize, layer1Specs } from "../../generators/scene-generator.js";
+import styles from "../../../styles/Storyboard3DRenderer.module.css";
 
 //
 
-const Panel3DCanvas = ({
-  panel,
-}) => {
-  const [renderer, setRenderer] = useState(null);
+import { promptKey } from "../../generators/scene-generator.js";
+import CustomButton from "../custom-button/index.js";
 
-  const canvasRef = useRef();
+//
 
-  // track canvas
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (canvas && panel.getDimension() === 3) {
-      const renderer = panel.createRenderer(canvas);
-      setRenderer(renderer);
+const Panel3DCanvas = ({ panel }) => {
+    const [renderer, setRenderer] = useState(null);
 
-      return () => {
-        renderer.destroy();
-      };
-    }
-  }, [panel, canvasRef.current]);
+    const canvasRef = useRef();
 
-  // listen for snapshot outmesh keys
-  useEffect(() => {
-    const keydown = e => {
-      if (!e.repeat) {
-        switch (e.key) {
-          case ' ': {
-            e.preventDefault();
-            e.stopPropagation();
+    // track canvas
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (canvas && panel.getDimension() === 3) {
+            const renderer = panel.createRenderer(canvas);
+            setRenderer(renderer);
 
-            panel.outmesh(renderer);
-            break;
-          }
+            return () => {
+                renderer.destroy();
+            };
         }
-      }
-    };
-    document.addEventListener('keydown', keydown);
+    }, [panel, canvasRef.current]);
 
-    return () => {
-      document.removeEventListener('keydown', keydown);
-    };
-  }, [panel, renderer]);
-  
-  return (
-    <canvas
-      className={styles.canvas}
-      width={panelSize}
-      height={panelSize}
-      ref={canvasRef}
-    />
-  );
+    // listen for snapshot outmesh keys
+    useEffect(() => {
+        const keydown = (e) => {
+            if (!e.repeat) {
+                switch (e.key) {
+                    case " ": {
+                        e.preventDefault();
+                        e.stopPropagation();
+
+                        panel.outmesh(renderer);
+                        break;
+                    }
+                }
+            }
+        };
+        document.addEventListener("keydown", keydown);
+
+        return () => {
+            document.removeEventListener("keydown", keydown);
+        };
+    }, [panel, renderer]);
+
+    return (
+        <canvas
+            className={styles.canvas}
+            width={panelSize}
+            height={panelSize}
+            ref={canvasRef}
+        />
+    );
 };
 
 //
 
-export const Storyboard3DRendererComponent = ({
-  panel,
-}) => {
-  const _getPrompt = () => panel.getData(promptKey) ?? '';
-  const [prompt, setPrompt] = useState(_getPrompt);
+export const Storyboard3DRendererComponent = ({ panel }) => {
+    const _getPrompt = () => panel.getData(promptKey) ?? "";
+    const [prompt, setPrompt] = useState(_getPrompt);
 
-  useEffect(() => {
-    const onupdate = e => {
-      setPrompt(_getPrompt());
-    };
-    panel.addEventListener('update', onupdate);
+    useEffect(() => {
+        const onupdate = (e) => {
+            setPrompt(_getPrompt());
+        };
+        panel.addEventListener("update", onupdate);
 
-    setPrompt(_getPrompt());
+        setPrompt(_getPrompt());
 
-    return () => {
-      panel.removeEventListener('update', onupdate);
-    };
-  }, [panel]);
+        return () => {
+            panel.removeEventListener("update", onupdate);
+        };
+    }, [panel]);
 
-  return (
-    <div className={styles.storyboard3DRenderer}>
-      <div className={styles.header}>
-        <input type='text' className={styles.input} value={prompt} placeholder='prompt' onChange={e => {
-          setPrompt(e.target.value);
-          panel.setData(promptKey, e.target.value);
-        }} />
-        <div className={styles.text}>Status: Compiled</div>
-        <button className={styles.button} onClick={async e => {
-          await panel.compile();
-        }}>Recompile</button>
-      </div>
-      <Panel3DCanvas
-        panel={panel}
-      />
-      <div className={styles.layers}>
-        {layer1Specs.map(({name, type}) => {
-          return (
-            <div
-              className={styles.layer}
-              key={name}
-            >{name}</div>
-          );
-        })}
-      </div>
-    </div>
-  );
+    return (
+        <div className={styles.storyboard3DRenderer}>
+            <div className={styles.header}>
+                <input
+                    type="text"
+                    className={styles.input}
+                    value={prompt}
+                    placeholder="prompt"
+                    onChange={(e) => {
+                        setPrompt(e.target.value);
+                        panel.setData(promptKey, e.target.value);
+                    }}
+                />
+                <CustomButton
+                    theme="dark"
+                    icon="ai"
+                    text="Recompile"
+                    size={16}
+                    className={styles.methodButton}
+                    onClick={async (e) => {
+                        await panel.compile();
+                    }}
+                />
+            </div>
+            <div className={styles.canvasWrap}>
+                <Panel3DCanvas panel={panel} />
+            </div>
+            <div className={styles.infoBox}>
+                <div className={styles.status}>
+                  Status: Compiled
+                </div>
+                <p>Layers:</p>
+                {layer1Specs.map(({ name, type }) => {
+                    return (
+                        <div className={styles.layer} key={name}>
+                            {name}
+                        </div>
+                    );
+                })}
+            </div>
+        </div>
+    );
 };

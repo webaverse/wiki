@@ -3,6 +3,7 @@
     margin: 0;
     padding: 0;
     margin-bottom: 8px;
+    width: 100%;
 }
 .galleryWrap .galleryItem {
     display: block;
@@ -36,7 +37,7 @@
 }
 .galleryWrap .galleryItem::after {
     content: " ";
-    display: block;
+    display: none;
     visibility: hidden;
     clear: both;
 }

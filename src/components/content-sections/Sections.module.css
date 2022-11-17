@@ -7,7 +7,7 @@
     float: right;
 }
 .leftSection .actionsWrap .actions button {
-    margin-left: 8px;
+    margin-left: 8px; 
     border: 2px solid #000000;
     color: #000000;
     background-color: #eaf4ef;
@@ -20,7 +20,7 @@
 .leftSection .actionsWrap .actions button.cancel {
     border: 1px solid #eaf4ef;
     color: #eaf4ef;
-    background-color: #091319;
+    background-color: #0c161d;
 }
 .leftSection .actionsWrap .tabs {
     float: left;
@@ -53,42 +53,73 @@
     padding: 10px 16px;
     font-size: 12px;
     margin-bottom: 6px;
+    position: relative;
 }
-.rightSection * {
+.rightSections::after {
+    display: block;
+    content: " ";
+    position: absolute;
+    top: 0;
+    right: -8px;
+    height: 100%;
+    width: 16px;
+    transform: skewX(-1deg);
+    background-color: inherit !important;
+    z-index: 0;
+}
+.rightSections::before {
+    display: block;
+    content: " ";
+    position: absolute;
+    top: 0;
+    left: -8px;
+    height: 100%;
+    width: 16px;
+    transform: skewX(1deg);
+    background-color: inherit !important;
+    z-index: 0;
+}
+.rightSection .infoWrap * {
     font-size: 12px !important;
     line-height: 16px !important;
 }
-.rightSection p {
+.rightSection .infoWrap p {
     margin: 0 !important;
     padding: 0;
 }
-.rightSection::after {
+.rightSection .infoWrap.skeleton * {
+    margin-bottom: 4px;
+}
+.rightSection .infoWrap::after {
     content: " ";
     display: block;
     clear: both;
 }
-.rightSection .label {
+.rightSection .infoWrap .label {
     width: 34%;
     float: left;
     color: #687674;
     text-transform: capitalize;
 }
-.rightSection .value {
+.rightSection .infoWrap.skeleton .label {
+    padding-right: 16px;
+}
+.rightSection .infoWrap .value {
     float: left;
     width: 66%;
     box-sizing: border-box;
     padding-right: 8px;
 }
-.rightSection ul,
-.rightSection li {
+.rightSection .infoWrap ul,
+.rightSection .infoWrap li {
     display: block;
     padding: 0;
     margin: 0;
 }
-.rightSection li {
+.rightSection .infoWrap li {
     margin-bottom: 6px;
 }
-.rightSection li:last-child {
+.rightSection .infoWrap li:last-child {
     margin-bottom: 0;
 }
 .actionsBox {

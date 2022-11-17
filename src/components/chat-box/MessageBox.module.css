@@ -1,0 +1,120 @@
+.messageBoxWrap {
+    margin-bottom: 18px;
+    padding: 0 16px 0 2px;
+    box-sizing: border-box;
+}
+.messageBoxWrap::after {
+    content: ' ';
+    display: block;
+    clear: both;
+}
+.sameAuthor {
+    margin-bottom:2px !important;
+}
+.noFold::before {
+    display: none !important;
+}
+.messageBoxWrap .messageContentWrap {
+    max-width: 80%;
+    margin-left: 52px;
+    position: relative;
+}
+
+.messageBoxWrap::after {
+    display: block;
+    content: ' ';
+    clear: both;
+}
+
+.messageBoxWrap .messageContent {
+    display: inline-block;
+    position: relative;
+    margin-top: 0;
+    font-size: 12px;
+    padding: 2px 6px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.01);
+    border-radius: 4px;
+}
+
+.messageBoxWrap .messageContent:first-child {
+    
+}
+
+.messageBoxWrap * {
+    color: #3e4a51;
+    color: rgba(136,152,158,0.06);
+}
+
+.messageBoxWrap .messageContent::after {
+    display: none;
+    content: " ";
+    position: absolute;
+    top: 0;
+    right: -8px;
+    height: 100%;
+    width: 16px;
+    transform: skewX(-12deg);
+    background-color: inherit !important;
+    z-index: -1;
+}
+
+.messageBoxWrap .messageContent::before {
+    display: none;
+    content: " ";
+    position: absolute;
+    top: 0;
+    left: -8px;
+    height: 100%;
+    width: 16px;
+    transform: skewX(-8deg);
+    background-color: inherit !important;
+    z-index: -1;
+}
+.messageBoxWrap .infoWrap {
+    margin-bottom: 6px;
+}
+.messageBoxWrap .messageContent * {
+    color: #bcc3c7 !important;
+    font-size: 13px;
+}
+.messageBoxWrap .infoWrap * {
+    color: #718086;
+    font-size: 14px;
+    letter-spacing: 0px;
+}
+.messageBoxWrap .infoWrap span {
+    font-size: 11px;
+    color: rgba(136,152,158,0.4) !important;
+    margin-left: 8px;
+}
+.messageBoxWrap .infoWrap span span {
+    margin-left: 0;
+}
+.messageBoxWrap .isImage {
+    padding: 2px !important;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.messageBoxWrap .isImage::after {
+    display: none !important;
+}
+.messageBoxWrap .messageContentWrap img {
+    height: 100px;
+    border-radius: 4px;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+.messageBoxWrap::after {
+    content: " ";
+    display: block;
+    clear: both;
+}
+
+.messageBoxWrap .messageContent * {
+    font-size: 13px !important;
+    font-weight: 300 !important;
+    margin: 0 0 0 0;
+    padding: 0;
+    line-height: 18px !important;
+}

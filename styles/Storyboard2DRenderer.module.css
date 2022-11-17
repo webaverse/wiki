@@ -1,5 +1,28 @@
 .storyboard2DRenderer {
-  
+  position: relative;
+}
+
+.storyboard2DRenderer .imageWrap {
+  margin-top: 16px;
+  display: inline-block;
+}
+
+.storyboard2DRenderer .imageWrap canvas {
+  border: 2px solid #1e3747;
+  zoom: 0.5;
+}
+
+.storyboard2DRenderer .infoBox {
+  position: absolute;
+  top: 62px;
+  left: 548px;
+  color: #b7c5ca;
+}
+
+.storyboard2DRenderer .status {
+  color: #ce840d;
+  margin-bottom: 8px;
+  font-size: 18px;
 }
 
 /* */
@@ -7,7 +30,6 @@
 .storyboard2DRenderer .header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
 }
 .storyboard2DRenderer .header .button {
   display: inline-block;
@@ -25,7 +47,11 @@
 /* */
 
 .storyboard2DRenderer .header input[type="text"] {
-  min-width: 500px;
+  width: 514px;
+  margin-right: 30px;
   padding: 10px;
-  font-size: 24px;
+  border: 2px solid #1e3747;
+  background: none;
+  font-size: 18px;
+  color: #b7c5ca;
 }
