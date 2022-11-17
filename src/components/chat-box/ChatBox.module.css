@@ -6,6 +6,9 @@
     position: relative;
     background-color: #162530;
 }
+.chatWrap * {
+    position: relative;
+}
 /*
 .chatWrap::after {
     display: block;
