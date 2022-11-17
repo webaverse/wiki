@@ -76,6 +76,7 @@ const ContentObject = ({ url }) => {
         isContentEdited,
         saveInProgress,
         resetChanges,
+        originUrl
     } = useContext(WikiContext);
 
     React.useEffect(() => {
@@ -131,12 +132,12 @@ const ContentObject = ({ url }) => {
                 console.log(match);
                 if (match) {
                     setFeaturedImage(
-                            `${window.location.origin}${encodeURIComponent(`${match[0]}.png`)}`
+                            `${originUrl}${encodeURIComponent(`${match[0]}.png`)}`
                      
                     );
                 } else {
                     setFeaturedImage(
-                            `${window.location.origin}/api/images/${type}s/${encodeURIComponent(imageContent)}.png`
+                            `${originUrl}/api/images/${type}s/${encodeURIComponent(imageContent)}.png`
                      
                     );
                 }
@@ -169,6 +170,7 @@ const ContentObject = ({ url }) => {
                     title={`${itemName} ${itemClass && `- ${itemClass}`}`}
                     description={description}
                     image={featuredImage}
+                    url={originUrl}
                 />
                 <UserBox />
                 <img

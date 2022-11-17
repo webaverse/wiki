@@ -27,7 +27,7 @@ export const MetaTags = (props) => {
             {/* Open Graph data */}
             <meta property="og:title" content={title} />
             <meta property="og:type" content="article" />
-            <meta property="og:url" content={window.location.origin} />
+            <meta property="og:url" content={url} />
             <meta property="og:image" content={image} />
             <meta property="og:description" content={description} />
             <meta property="og:site_name" content="Webaverse Wiki" />

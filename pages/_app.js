@@ -24,6 +24,9 @@ function MyApp({ Component, pageProps }) {
     // Check if saving content is in progress
     const [saveInProgress, setSaveInProgress] = useState(false);
 
+    // Origin URL
+    const [ originUrl, setOriginUrl ] = useState();
+
     useEffect(() => {
         if (url) {
             setContentLoading(true);
@@ -36,6 +39,9 @@ function MyApp({ Component, pageProps }) {
                 setContentLoading(false);
                 console.log(res?.type)
             });
+            if (typeof window !== "undefined") {
+                setOriginUrl(window.location.origin)
+            }
         }
     }, [url]);
 
@@ -98,7 +104,8 @@ function MyApp({ Component, pageProps }) {
         saveContent,
         isContentEdited,
         saveInProgress,
-        resetChanges
+        resetChanges,
+        originUrl
     };
     return (
         <WikiContext.Provider value={contextValues}>
