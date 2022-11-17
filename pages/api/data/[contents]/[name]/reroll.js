@@ -19,7 +19,7 @@ export default async function handler(req, res) {
 
     const [datasetSpecs, generatedItem] = await Promise.all([
         getDatasetSpecs(),
-        generateItem(type, name),
+        generateItem(type, setName),
     ]);
     const datasetSpec = datasetSpecs.find((ds) => ds.type === type);
     const itemText = formatItemText(generatedItem, datasetSpec);

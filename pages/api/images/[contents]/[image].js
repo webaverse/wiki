@@ -15,13 +15,13 @@ const globalImagePrompt = `trending on ArtStation`;
 
 const CharacterImage = async (req, res) => {
     const props = await CharacterImage.getInitialProps({ req });
-    console.log(props);
+    // console.log(props);
     if (props) {
         const { imgUrl } = props;
 
         const proxyRes = await fetch(imgUrl);
 
-        console.log("IMAGE: ", imgUrl);
+        // console.log("IMAGE: ", imgUrl);
 
         // proxy the status and headers
         res.status(proxyRes.status);
@@ -29,7 +29,7 @@ const CharacterImage = async (req, res) => {
             res.setHeader(key, value);
         }
         // pipe the response
-        console.log("got body", proxyRes.body);
+        // console.log("got body", proxyRes.body);
 
         // remove and use " Readable.fromWeb(proxyRes.body).pipe(res); "  
         // when node is upgraded to 18 and above
@@ -46,8 +46,9 @@ CharacterImage.getInitialProps = async (ctx) => {
     // Check if ?reroll=true is passed in the query
     const isReRoll = req.query?.reroll;
 
-    console.log("Image URL: ", req.url);
-    console.log("Reroll: ", req.query?.reroll);
+    // console.log("Image URL: ", req.url);
+    // console.log("Reroll: ", req.query?.reroll);
+
     // Clean url from passed values after ?
     const reqUrlClean = req.url.replace(/\?.*$/, "");
 

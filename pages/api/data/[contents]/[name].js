@@ -6,7 +6,7 @@ import { formatItemText } from "../../../../datasets/dataset-parser.js";
 import { generateItem } from "../../../../datasets/dataset-generator.js";
 import { cleanName } from "../../../../utils.js";
 
-export default async function handler(req, res) {
+export default async function handler(req, res) { 
     //const match = req.url.match(/^\/api\/data\/([^\/]*)\/([^\/]*)/);
     //let type = match ? match[1].replace(/s$/, '') : '';
     //let name = match ? match[2] : '';
@@ -14,7 +14,6 @@ export default async function handler(req, res) {
     // A safer way to get the exact URL params
     // Also by accessing the query params no need to decode URI
     const { contents, name } = req.query;
-
     let type = contents ? contents.replace(/s$/, "") : "";
     let setName = name ? name : "";
 
@@ -26,29 +25,30 @@ export default async function handler(req, res) {
     const id = uuidByString(title);
     const query = await c.databaseClient.getByName("Content", title);
 
+    //console.log("QUERY RESPONSE: ", query, title);
+
     if (query) {
         const { content, title, type } = query;
         res.json(query);
-        console.log("AAAAAAAAAA");
     } else {
         const c = new Ctx();
         const [datasetSpecs, generatedItem] = await Promise.all([
             getDatasetSpecs(),
-            generateItem(type, name),
+            generateItem(type, setName),
         ]);
         const datasetSpec = datasetSpecs.find((ds) => ds.type === type);
         const itemText = formatItemText(generatedItem, datasetSpec);
 
-        console.log("CONTENT: ", itemText);
-
         const content = `\
 ${itemText}
-`;
+`;      
         await c.databaseClient.setByName(
             "Content",
             title,
             content
         );
+
+        console.log("Data Saved")
 
         res.json({
             id,

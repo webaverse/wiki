@@ -37,7 +37,7 @@
 }
 .galleryWrap .galleryItem::after {
     content: " ";
-    display: block;
+    display: none;
     visibility: hidden;
     clear: both;
 }

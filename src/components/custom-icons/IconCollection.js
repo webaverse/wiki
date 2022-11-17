@@ -110,5 +110,9 @@ export const IconCollection = [
     {
         name: 'arrowRight',
         file: "/assets/icons/arrowRight.svg"
+    },
+    {
+        name: 'check',
+        file: "/assets/icons/check.svg"
     }
 ]

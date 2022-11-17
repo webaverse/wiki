@@ -2,7 +2,7 @@ import uuidByString from "uuid-by-string";
 import Head from "next/head";
 
 import styles from "../../styles/ContentObject.module.css";
-import { Ctx, saveContent } from "../../clients/context.js";
+import { Ctx } from "../../clients/context.js";
 import {
     cleanName,
     formatImages,
@@ -26,10 +26,11 @@ import { MetaTags } from "../../src/components/meta-tags/MetaTags";
 import { fetchContent } from "../../src/utils/api";
 import { WikiContext } from "../_app";
 
-import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
-import 'react-loading-skeleton/dist/skeleton.css';
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 import { LeftSkeleton } from "../../src/components/content-sections/LeftSkeleton";
 import { RightSkeleton } from "../../src/components/content-sections/RightSkeleton";
+import CustomButton from "../../src/components/custom-button";
 
 //
 
@@ -41,6 +42,9 @@ const rightColumn = [
     "Has",
     "Abilities",
     "Limit Break",
+    "Biome",
+    "Items",
+    "Mobs",
 ];
 
 const hideSections = ["Name", "Class", "Image"];
@@ -48,7 +52,6 @@ const hideSections = ["Name", "Class", "Image"];
 //
 
 const ContentObject = ({ url }) => {
-
     const [itemName, setItemName] = useState("");
     const [itemClass, setItemClass] = useState("");
     const [featuredImage, setFeaturedImage] = useState("");
@@ -62,27 +65,36 @@ const ContentObject = ({ url }) => {
     const [data, setData] = useState();
     const [loading, setLoading] = useState();
 
-    const { setUrl } = useContext(WikiContext);
+    const {
+        setUrl,
+        content,
+        type,
+        contentLoading,
+        rerollAllSections,
+        saveContent,
+        editableContent,
+        isContentEdited,
+        saveInProgress,
+        resetChanges
+    } = useContext(WikiContext);
 
     React.useEffect(() => {
-        setLoading(true);
-            fetchContent(url).then((data) => {
-                setData(data);
-                setLoading(false);
-            });
-
-            setUrl(url);
+        setUrl(url);
     }, [url]);
 
     React.useEffect(() => {
-        if (data?.content && data?.type) {
-            formatImages(data?.content, data?.type).then((fiContent) => {
+        setLoading(contentLoading);
+    }, [contentLoading]);
+
+    React.useEffect(() => {
+        if (editableContent && type) {
+            formatImages(editableContent, type).then((fiContent) => {
                 formatUrls(fiContent).then((fuContent) => {
                     setFormatedContent(fuContent);
                 });
             });
         }
-    }, [data]);
+    }, [editableContent]);
 
     React.useEffect(() => {
         if (formatedContent) {
@@ -120,7 +132,7 @@ const ContentObject = ({ url }) => {
                     setFeaturedImage(match[0] + ".png");
                 } else {
                     setFeaturedImage(
-                        `/api/images/${data?.type}s/${imageContent}.png`
+                        `/api/images/${type}s/${imageContent}.png`
                     );
                 }
             } else {
@@ -140,147 +152,212 @@ const ContentObject = ({ url }) => {
         setEditSource(false);
     };
 
-    const editSection = async (content) => {
-        saveContent();
-    };
+    const editSection = async (content) => {};
 
     //if (loading) return <p>Loading...</p>;
     //if (!data) return <p>No profile data</p>;
 
     return (
         <SkeletonTheme baseColor="#203544" highlightColor="#264051">
-        <div className={styles.character}>
-            <MetaTags
-                title={`${itemName} ${itemClass && `- ${itemClass}`}`}
-                description={description}
-                image={featuredImage}
-            />
-            <UserBox />
-            <img
-                src={"/assets/logo.svg"}
-                className={styles.logo}
-                alt="Webaverse Wiki"
-            />
+            <div className={styles.character}>
+                <MetaTags
+                    title={`${itemName} ${itemClass && `- ${itemClass}`}`}
+                    description={description}
+                    image={featuredImage}
+                />
+                <UserBox />
+                <img
+                    src={"/assets/logo.svg"}
+                    className={styles.logo}
+                    alt="Webaverse Wiki"
+                />
 
-            <div className={styles.contentWrap}>
-                <div className={styles.name}>
-                    <span className={styles.type}>{loading ? <Skeleton width={100} /> : `${data?.type}s` }</span>
-                    <h1>{loading ? <Skeleton width={"50%"} /> : itemName }</h1>
+                <div className={styles.contentWrap}>
+                    <div className={styles.name}>
+                        <span className={styles.type}>
+                            {loading ? <Skeleton width={100} /> : `${type}s`}
+                        </span>
+                        <h1>
+                            {loading ? <Skeleton width={"50%"} /> : itemName}
+                        </h1>
+                        {!editSource ? (
+                            <div className={styles.sourceActions}>
+                                <div
+                                    className={styles.edit}
+                                    onClick={editContentSource}
+                                >
+                                    <img
+                                        src={"/assets/edit-source-lock.svg"}
+                                        className={styles.icon}
+                                    />
+                                    Edit Source
+                                </div>
+                                <div
+                                    className={styles.edit}
+                                    onClick={rerollAllSections}
+                                >
+                                    <img
+                                        src={"/assets/refresh.svg"}
+                                        className={styles.icon}
+                                    />
+                                    Reroll Content
+                                </div>
+                            </div>
+                        ) : (
+                            <div className={styles.sourceActions}>
+                                <div
+                                    className={styles.back}
+                                    onClick={backToPage}
+                                >
+                                    <img
+                                        src={"/assets/arrowBack.svg"}
+                                        className={styles.iconBack}
+                                    />
+                                    Back to Page
+                                </div>
+                                <button className={styles.button}>Save</button>
+                            </div>
+                        )}
+                    </div>
                     {!editSource ? (
-                        <div className={styles.sourceActions}>
-                            <div
-                                className={styles.edit}
-                                onClick={editContentSource}
-                            >
-                                <img
-                                    src={"/assets/edit-source-lock.svg"}
-                                    className={styles.icon}
-                                />
-                                Edit Source
+                        <React.Fragment>
+                            <div className={styles.rightContent}>
+                                {type !== "chat" && (
+                                    <>
+                                        <div className={styles.title}>
+                                            {loading ? (
+                                                <Skeleton width={100} />
+                                            ) : (
+                                                itemName
+                                            )}
+                                        </div>
+                                        {itemClass && (
+                                            <div className={styles.subtitle}>
+                                                {itemClass}
+                                            </div>
+                                        )}
+                                        {loading ? (
+                                            <Skeleton
+                                                height={220}
+                                                style={{ marginBottom: "8px" }}
+                                            />
+                                        ) : (
+                                            <div
+                                                className={
+                                                    styles.previewImageWrap
+                                                }
+                                            >
+                                                <img
+                                                    src={
+                                                        "/assets/image-frame.svg"
+                                                    }
+                                                    className={styles.frame}
+                                                />
+                                                <div className={styles.mask}>
+                                                    <ImageLoader
+                                                        url={featuredImage}
+                                                        className={styles.image}
+                                                        rerollable={true}
+                                                    />
+                                                </div>
+                                            </div>
+                                        )}
+                                    </>
+                                )}
+                                {loading ? (
+                                    <RightSkeleton />
+                                ) : (
+                                    <div>
+                                        {sections &&
+                                            sections.map((section, i) => {
+                                                if (
+                                                    rightColumn.includes(
+                                                        section.title
+                                                    )
+                                                )
+                                                    return (
+                                                        <RightSection
+                                                            title={
+                                                                section.title
+                                                            }
+                                                            content={
+                                                                section.content
+                                                            }
+                                                            type={type}
+                                                            index={i}
+                                                            loading={loading}
+                                                            key={i}
+                                                        />
+                                                    );
+                                            })}
+                                        <MiniMap coordinates={""} />
+                                    </div>
+                                )}
                             </div>
-                        </div>
+                            <div className={styles.leftContent}>
+                                {loading ? (
+                                    <LeftSkeleton />
+                                ) : (
+                                    <div className={styles.markdown}>
+                                        {sections &&
+                                            sections.map((section, i) => {
+                                                if (
+                                                    !rightColumn.includes(
+                                                        section.title
+                                                    ) &&
+                                                    !hideSections.includes(
+                                                        section.title
+                                                    )
+                                                ) {
+                                                    return (
+                                                        <LeftSection
+                                                            title={
+                                                                section.title
+                                                            }
+                                                            content={
+                                                                section.content
+                                                            }
+                                                            editSection={
+                                                                editSection
+                                                            }
+                                                            gallery={gallery}
+                                                            type={type}
+                                                            index={i}
+                                                            key={i}
+                                                        />
+                                                    );
+                                                }
+                                            })}
+                                    </div>
+                                )}
+                            </div>
+                        </React.Fragment>
                     ) : (
-                        <div className={styles.sourceActions}>
-                            <div className={styles.back} onClick={backToPage}>
-                                <img
-                                    src={"/assets/arrowBack.svg"}
-                                    className={styles.iconBack}
-                                />
-                                Back to Page
-                            </div>
-                            <button className={styles.button}>Save</button>
-                        </div>
+                        <EditSource content={content} />
                     )}
                 </div>
-                {!editSource ? (
-                    <React.Fragment>
-                        <div className={styles.rightContent}>
-                            {data?.type !== "chat" && (
-                                <>
-                                    <div className={styles.title}>
-                                        {loading ? <Skeleton width={100} /> : itemName}
-                                    </div>
-                                    {itemClass && (
-                                        <div className={styles.subtitle}>
-                                            {itemClass}
-                                        </div>
-                                    )}
-                                    {loading ? (<Skeleton height={220} style={{marginBottom: "8px"}} />) : (
-                                    <div className={styles.previewImageWrap}>
-                                        <img
-                                            src={"/assets/image-frame.svg"}
-                                            className={styles.frame}
-                                        />
-                                        <div className={styles.mask}>
-                                            <ImageLoader
-                                                url={featuredImage}
-                                                className={styles.image}
-                                                rerollable={true}
-                                            />
-                                        </div>
-                                    </div>
-                                    )}
-                                </>
-                            )}
-                            {loading ? (
-                                <RightSkeleton />
-                            ) : (
-                            <div>
-                                {sections &&
-                                    sections.map((section, i) => {
-                                        if (rightColumn.includes(section.title))
-                                            return (
-                                                <RightSection
-                                                    title={section.title}
-                                                    content={section.content}
-                                                    type={data?.type}
-                                                    index={i}
-                                                    loading={loading}
-                                                    key={i}
-                                                />
-                                            );
-                                    })}
-                                <MiniMap coordinates={""} />
-                            </div>
-                            )}
-                        </div>
-                        <div className={styles.leftContent}>
-                        {loading ? (
-                                <LeftSkeleton />
-                            ) : (
-                            <div className={styles.markdown}>
-                                {sections &&
-                                    sections.map((section, i) => {
-                                        if (
-                                            !rightColumn.includes(
-                                                section.title
-                                            ) &&
-                                            !hideSections.includes(
-                                                section.title
-                                            )
-                                        ) {
-                                            return (
-                                                <LeftSection
-                                                    title={section.title}
-                                                    content={section.content}
-                                                    editSection={editSection}
-                                                    gallery={gallery}
-                                                    type={data?.type}
-                                                    index={i}
-                                                    key={i}
-                                                />
-                                            );
-                                        }
-                                    })}
-                            </div>
-                            )}
-                        </div>
-                    </React.Fragment>
-                ) : (
-                    <EditSource content={content} />
-                )}
             </div>
-        </div>
+            {isContentEdited && (
+            <div className={styles.saveEditedContentWrap}>
+                <CustomButton
+                    theme="dark"
+                    icon="check"
+                    text={saveInProgress ? "Saving..." : "Save Changes"}
+                    size={14}
+                    className={styles.methodButton}
+                    onClick={() => !saveInProgress && saveContent()}
+                />
+                <CustomButton
+                    theme="dark"
+                    icon="close"
+                    text="Cancel"
+                    size={14}
+                    disabled={saveInProgress ? true : false}
+                    className={styles.methodButton}
+                    onClick={() => !saveInProgress && resetChanges()}
+                />
+            </div>
+            )}
         </SkeletonTheme>
     );
 };
@@ -289,7 +366,7 @@ ContentObject.getInitialProps = async (ctx) => {
     const { req } = ctx;
     const url = req.url;
     return {
-        url
+        url,
     };
 };
 

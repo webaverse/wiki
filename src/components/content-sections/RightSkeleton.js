@@ -6,9 +6,9 @@ export const RightSkeleton = () => {
         <div>
             <Skeleton height={40} />
             <div style={{height: "8px"}} />
-            <Skeleton height={40} />
+            <Skeleton height={60} />
             <div style={{height: "8px"}} />
-            <Skeleton height={40} />
+            <Skeleton height={80} />
         </div>
     );
 };
