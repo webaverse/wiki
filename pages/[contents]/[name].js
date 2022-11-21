@@ -166,6 +166,7 @@ const ContentObject = ({ url }) => {
     return (
         <SkeletonTheme baseColor="#203544" highlightColor="#264051">
             <div className={styles.character}>
+                {url && (
             <Head>
             <title>{title}</title>
             <meta name="description" content={description} />
@@ -188,6 +189,7 @@ const ContentObject = ({ url }) => {
             <meta name="twitter:description" content={description} />
             <meta name="twitter:image" content={featuredImage} />
         </Head>
+        )}
                 <UserBox />
                 <img
                     src={"/assets/logo.svg"}

@@ -8,7 +8,7 @@ export const fetchContent = async (url, format) => {
         .then((data) => {
             return data;
         }); 
-};
+}; 
 
 // Reroll Content
 export const fetchRerollContent = async (url, format) => {

@@ -1,0 +1,91 @@
+.editContent * {
+    outline: 0 !important;
+}
+.editContent label {
+    font-size: 14px;
+    color: #88989e;
+    margin-bottom: 8px;
+    display: block;
+}
+.editContent input {
+    width: 100% !important;
+    padding: 8px 16px;
+    font-size: 14px;
+    background-color: #09131966;
+    border: 1px solid #88989e;
+}
+.editContent textarea {
+    width: 100% !important;
+    padding: 8px 16px;
+    min-height: 120px;
+    font-size: 14px;
+    background-color: #09131966;
+    border: 1px solid #88989e;
+}
+
+.statsFormWrap {
+    display: flex;
+}
+.statsFormWrap > div {
+    margin-right: 16px;
+}
+.statsFormWrap > div:last-child {
+    margin-right: 0;
+}
+
+.imageFormWrap {
+    display: flex;
+}
+.imageFormWrap > div {
+    margin-right: 16px;
+    margin-bottom: 8px;
+}
+.imageFormWrap > div:last-child {
+    margin: 0;
+}
+.imageFormWrap .imageTitle {
+    width: 30%;
+}
+.imageFormWrap .imageDesc {
+    width: 70%;
+}
+
+.quoteList .quoteFormItem {
+    margin-bottom: 8px !important;
+    position: relative;
+}
+
+.quoteList button {
+    width: 100%;
+    text-align: center;
+    background: none;
+    border: 1px dashed #88989e;
+    padding: 12px 0;
+    margin-top: 16px;
+    cursor: pointer;
+}
+.quoteList button:hover {
+    color:#fdbf00 ;
+}
+
+.quoteList .remove {
+    position: absolute;
+    right: -6px;
+    top: 8px;
+}
+
+.tabs {
+ padding: 0 !important;
+}
+.tabs span {
+    display: inline-block;
+    margin-right: 16px;
+    border-bottom: 2px solid transparent;
+    padding-bottom: 8px;
+    margin-bottom: -2px;
+    cursor: pointer;
+}
+.tabs span.active {
+    color: #fdbf00;
+    border-bottom: 2px solid #fdbf00;
+}
