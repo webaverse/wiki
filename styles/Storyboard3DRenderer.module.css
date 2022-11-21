@@ -2,24 +2,29 @@
   position: relative;
 }
 
+.storyboard3DRenderer::after {
+  display: block;
+  content: ' ';
+  clear: both;
+}
+
 .storyboard3DRenderer .canvasWrap {
   margin-top: 16px;
   display: inline-block;
   background-color: #091319;
+  float: left;
 }
 
 .storyboard3DRenderer .infoBox {
-  position: absolute;
-  top: 62px;
-  left: 548px;
   color: #b7c5ca;
+    float: left;
+    margin-left: 32px;
+    margin-top: 13px;
 }
 
 .storyboard3DRenderer .infoBox .layer {
   margin-bottom: 4px;
-  display: list-item;
-  margin-left: 14px;
-  list-style: circle;
+  float: left;
 }
 
 .storyboard3DRenderer .status {
@@ -52,7 +57,7 @@
   background-color: #000;
   border-color: #000;
 }
-
+/*
 .storyboard3DRenderer canvas {
   width: 768px;
   height: 768px;
@@ -74,21 +79,29 @@
 /* */
 
 .storyboard3DRenderer .layers {
-  display: flex;
+  width: 340px;
+}
+.storyboard3DRenderer .layers::after {
+  display: block;
+  content: ' ';
+  clear: both;
 }
 .storyboard3DRenderer .layers .layer {
-  width: 150px;
-  height: 150px;
-  margin-right: 5px;
-  padding: 5px;
-  background-color: #CCC;
-  font-size: 12px;
+  position: relative;
+  width: 156px;
+  height: 156px;
+  margin: 0 4px 4px 0;
+  padding: 4px;
+  background-color: #091319;
+  border: 2px solid #162834;
+  overflow: hidden;
   cursor: pointer;
+  font-size: 12px;
 }
 .storyboard3DRenderer .layers .layer:hover,
 .storyboard3DRenderer .layers .layer.selected
 {
-  background-color: #AAA;
+  border-color: #CE9B0E;
 }
 .storyboard3DRenderer .layers .layer.selected {
   cursor: default;
