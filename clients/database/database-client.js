@@ -23,16 +23,17 @@ export class DatabaseClient {
         path: [
           'title',
         ],
-        valueString: title,
-      })
-      .do()
-      /* .then(res => {
-        console.log(res)
+        //valueString: title,
+        valueText: title
+      }).do()
+      /*
+      .then(res => {
+        console.log("DATA RESPONSE: ", res?.data?.Get?.[className]?.[0])
       })
       .catch(err => {
         console.error(err)
-      }); */
-    // console.log('got result', JSON.stringify({className, title, result}, null, 2));
+      });*/ 
+     //console.log('got result', result?.data?.Get?.[className]?.[0]);
     return result?.data?.Get?.[className]?.[0];
   }
   async setByName(className, title, content) {

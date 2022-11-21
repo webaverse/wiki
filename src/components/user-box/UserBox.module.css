@@ -1,8 +1,8 @@
 .userBoxWrap {
   height: 34px;
-  background-color: #0d1a22;
+  background-color: #112029;
   min-width: 40px;
-  position: absolute;
+  position: absolute !important;
   top: 32px;
   right: 40px;
   z-index: 2;
@@ -14,7 +14,7 @@
   height: 34px;
   width: 40px;
   transform: skewX(-18deg);
-  background-color: #0d1a22;
+  background-color: #112029;
 }
 
 .userBoxWrap .rightCorner {
@@ -23,7 +23,7 @@
   height: 34px;
   width: 40px;
   transform: skewX(-18deg);
-  background-color: #0d1a22;
+  background-color: #112029;
 }
 
 .userBoxWrap .profileImage {

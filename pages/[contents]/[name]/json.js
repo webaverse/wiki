@@ -1,7 +1,7 @@
 import uuidByString from 'uuid-by-string';
 // import Markdown from 'marked-react';
 
-import styles from '../../../styles/Character.module.css'
+import styles from '../../../styles/ContentObject.module.css'
 import {Ctx} from '../../../clients/context.js';
 import {cleanName} from '../../../utils.js';
 // import {DatasetEngine, formatItem} from '../../datasets/datasets.js';
@@ -17,7 +17,9 @@ const ContentObjectJson = ({
   if (!error) {
     return (
       <div className={styles.character}>
-        <pre>{JSON.stringify(json, null, 2)}</pre>
+        <div className={styles.contentWrap}>
+          <pre>{JSON.stringify(json, null, 2)}</pre>
+        </div>
       </div>
     );
   } else {

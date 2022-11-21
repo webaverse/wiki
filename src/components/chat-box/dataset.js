@@ -1,0 +1,38 @@
+// FOR TESTING CHAT CONTENT STRUCTURE IN UI ONLY
+export const testContent = `
+- > HORTIGREAVE, YUNI, SAYU, PINKER | ENTER THE CHAT
+- Hortigreave: Ok class, today we'll be learning about the different kinds of demons you might encounter.
+- Hortigreave: Demons are different from normal Mobs.
+- Hortigreave: They are able to cast spells and use special attacks.
+- Hortigreave: You'll need to be prepared for them.
+- Hortigreave: Demons are also born from the same source of magic that we are.
+- Yuni: That sounds like a bunch of baloney.
+- Hortigreave: Ok Yuni, what do you think is the source of magic?
+- Sayu: It's the Mana Flowers!
+- SAYU: ![the mana flower growing in a lush vegetation landscape]() TO YUNI
+- Yuni: Thanks, Sayu.
+- > YUNI | EMOTES JOY
+- Yuni: Or, maybe this world is just some simulated reality.
+- Yuni: And somebody programmed demons to be that way.
+- Hortigreave: Yuni, Sayu...
+- Hortigreave: The rules are clear, it is not for us to question The Origin Tablets and the teachings of The Citadel.
+- Hortigreave: Magic is the source of life, and it weaves itself through the AI Fields.
+- Hortigreave: This magic gives life to all of us, but when things go wrong, demons are born.
+- Hortigreave: The data has been conclusive for the last hundred years.
+- Hortigreave: I happen to be an expert.
+- > YUNI | EMOTES JOY
+- Yuni: Hey Sayu, professor dumbass is preaching again!
+- Yuni: Let's get out of here, Sayu!
+- Hortigreave: I'm afraid I have to punish you for insulting a teacher like that.
+- Hortigreave: Your punishment will be..
+- Hortigreave: You'll have to kite the demons in battle today, Yuni.
+- HORTIGREAVE: ![a demon trapped in a cage in an underground bunker]()
+- Yuni: What?!
+- > YUNI | EMOTES SCARED
+- Yuni: Damn it, old man...
+- Hortigreave: If you can't do it, then you don't have the right to be a Huntress.
+- Yuni: OK... I'll do it...
+- YUNI | EMOTES SAD
+- Sayu: You should have kept your mouth shut, Yuni.
+- > SAYU | EMOTES SAD
+`;

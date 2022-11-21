@@ -1,37 +1,65 @@
 .gen {
   color: #000;
-  font-size: 30px;
+  width: 100vw;
+  max-width: 1200px;
+  min-width: 1070px;
+  margin: 0 auto;
+  padding: 24px;
+  position: relative;
+  box-sizing: border-box;
 }
+
+.gen .contentWrap {
+  background-color: #112029;
+  width: 100%;
+  padding: 28px 40px;
+  box-sizing: border-box;
+  position: relative;
+  color: #88989e;
+  text-transform: capitalize;
+}
+
 .gen .tabs {
   display: flex;
-  padding: 30px;
+  font-size: 18px;
+  border-bottom: 2px solid #152934;
+  margin-bottom: 24px;
+  margin-top: 0;
 }
 .gen .tabs .tab {
-  color: #2196f3;
-  font-size: 40px;
+  color: #88989e;
   cursor: pointer;
+  border-bottom: 2px solid transparent;
+  padding-bottom: 14px;
+  margin-bottom: -2px;
 }
 .gen .tabs .tab:hover {
   /* color: #1e88e5; */
   /* darker... */
-  color: #1976d2;
-  text-decoration: underline;
+  color: #CE9B0E;
 }
 .gen .tabs .tab + .tab {
   margin-left: 20px;
 }
 
 .gen .tabs .tab.selected {
-  font-weight: 600;
+  color: #CE9B0E;
+  border-bottom: 2px solid #CE9B0E;
 }
 
 /* */
 
 .gen .input {
-  min-width: 800px;
   margin-right: 30px;
   padding: 10px;
-  font-size: 24px;
+  border: 2px solid #1e3747;
+  background: none;
+  font-size: 18px;
+  color: #b7c5ca;
+  outline: none;
+  width: -webkit-calc(100% - 200px);
+  width: -moz-calc(100% - 200px);
+  width: calc(100% - 200px);
 }
 .gen .button {
   display: inline-block;
@@ -51,11 +79,14 @@
 .characterCreator {
   display: flex;
   align-items: center;
+  justify-content: center;
+  margin-top: 16px;
+  text-align: center;
 }
 .characterCreator .arrow {
   position: relative;
-  width: 105px;
-  height: 105px;
+  width: 40px;
+  height: 40px;
   cursor: pointer;
 }
 .characterCreator .arrow:not(:hover) .img.light {
@@ -71,17 +102,70 @@
 }
 .characterCreator .arrow .img {
   position: absolute;
-  width: 105px;
-  height: 105px;
+  width: 40px;
+  height: 40px;
   visibility: hidden;
 }
 .characterCreator .arrow .img.light {
 }
 .characterCreator .arrow .img.dark {
 }
+
+.characterCreator .characterBox {
+  display: inline-block;
+  position: relative;
+  margin: 0 18px;
+  margin-bottom: 20px;
+}
+
+.characterCreator .characterBox .leftArrow {
+  position: absolute;
+  top: 50%;
+  left: -8px;
+}
+
+.characterCreator .characterBox .rightArrow {
+  position: absolute;
+  top: 50%;
+  right: -8px;
+}
+
 .characterCreator .canvasWrap {
-  display: flex;
-  flex-direction: column;
+  width: 100%;
+  margin: auto;
+}
+.characterCreator .canvasWrap canvas {
+  zoom: 0.25;
+  margin: 16px;
+}
+.characterCreator .generatingCharacter {
+  width:260px;
+  height: 518px;
+  border: 1px solid #1e3747;
+  position: relative;
+  display: inline-block;
+  margin: 0 24px;
+}
+
+.characterCreator .generatingCharacter .loaderWrap {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform:translateX(-50%) translateY(-50%);
+  width: 90px;
+  height: 90px;
+  text-align: center;
+  font-size: 12px;
+  padding-top: 30px;
+  box-sizing: border-box;
+}
+.characterCreator .generatingCharacter .loaderWrap img {
+  width: 90px;
+  height: 90px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0.6;
 }
 
 /* */
@@ -92,9 +176,10 @@
   font-weight: bold;
   cursor: pointer;
   overflow: hidden;
+  color: #ffc415;
 }
 .gen a:hover {
-  color: #1976d2;
+  color: #CE9B0E;
 }
 .gen input[type="file"] {
   position: absolute;

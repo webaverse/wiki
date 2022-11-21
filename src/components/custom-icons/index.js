@@ -21,16 +21,23 @@ export default function CustomIcon(props) {
     useEffect(() => {
         if (icon) {
             getSVG(icon).then((res) => {
-                svgRef.current.innerHTML = "";
-                if (res) {
-                    res.classList.add("icon");
-                    svgRef.current.append(res);
+                if (svgRef.current) {
+                    svgRef.current.innerHTML = "";
+                    if (res) {
+                        res.classList.add("icon");
+
+                        svgRef.current.append(res);
+                    }
                 }
             });
         }
     }, []);
 
     return (
-        <span ref={svgRef} style={{height: size, width: size}} className={className}></span>
+        <span
+            ref={svgRef}
+            style={{ height: size, width: size }}
+            className={className}
+        ></span>
     );
 }

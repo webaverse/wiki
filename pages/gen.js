@@ -1,11 +1,11 @@
-import {useState} from 'react';
-import classnames from 'classnames';
+import { useEffect, useState } from "react";
+import classnames from "classnames";
 
-import SceneGeneratorComponent from '../src/components/generators/SceneGeneratorComponent.jsx';
-import CharacterGeneratorComponent from '../src/components/generators/CharacterGeneratorComponent.jsx';
-import ItemGeneratorComponent from '../src/components/generators/ItemGeneratorComponent.jsx';
+import SceneGeneratorComponent from "../src/components/generators/SceneGeneratorComponent.jsx";
+import CharacterGeneratorComponent from "../src/components/generators/CharacterGeneratorComponent.jsx";
+import ItemGeneratorComponent from "../src/components/generators/ItemGeneratorComponent.jsx";
 
-import styles from '../styles/Gen.module.css';
+import styles from "../styles/Gen.module.css";
 
 //
 
@@ -19,48 +19,67 @@ import styles from '../styles/Gen.module.css';
 //
 
 const Gen = () => {
-  const [tab, setTab] = useState('');
+    const [tab, setTab] = useState("");
 
-  const _setTab = newTab => () => {
-    setTab(newTab);
-  };
+    const _setTab = (newTab) => () => {
+        setTab(newTab);
+    };
 
-  return (
-    <div className={styles.gen}>
-      <div className={styles.tabs}>
-        <div className={classnames(
-          styles.tab,
-          tab === 'sceneGenerator' ? styles.selected : '',
-        )} onClick={_setTab('sceneGenerator')}>Scene</div>
-        <div className={classnames(
-          styles.tab,
-          tab === 'characterGenerator' ? styles.selected : '',
-        )} onClick={_setTab('characterGenerator')}>Character</div>
-        <div className={classnames(
-          styles.tab,
-          tab === 'itemGenerator' ? styles.selected : '',
-        )} onClick={_setTab('itemGenerator')}>Item</div>
-      </div>
-      {
-        (() => {
-          switch (tab) {
-            case 'sceneGenerator': {
-              return <SceneGeneratorComponent />
-              break;
-            }
-            case 'characterGenerator': {
-              return <CharacterGeneratorComponent />
-              break;
-            }
-            case 'itemGenerator': {
-              return <ItemGeneratorComponent />
-            }
-            default:
-              return null;
-          }
-        })()
-      }
-    </div>
-  );
+    useEffect(() => {
+      setTab("sceneGenerator");
+    }, [])
+
+    return (
+        <div className={styles.gen}>
+            <div className={styles.contentWrap}>
+                <div className={styles.tabs}>
+                    <div
+                        className={classnames(
+                            styles.tab,
+                            tab === "sceneGenerator" ? styles.selected : ""
+                        )}
+                        onClick={_setTab("sceneGenerator")}
+                    >
+                        Scene
+                    </div>
+                    <div
+                        className={classnames(
+                            styles.tab,
+                            tab === "characterGenerator" ? styles.selected : ""
+                        )}
+                        onClick={_setTab("characterGenerator")}
+                    >
+                        Character
+                    </div>
+                    <div
+                        className={classnames(
+                            styles.tab,
+                            tab === "itemGenerator" ? styles.selected : ""
+                        )}
+                        onClick={_setTab("itemGenerator")}
+                    >
+                        Item
+                    </div>
+                </div>
+                {(() => {
+                    switch (tab) {
+                        case "sceneGenerator": {
+                            return <SceneGeneratorComponent />;
+                            break;
+                        }
+                        case "characterGenerator": {
+                            return <CharacterGeneratorComponent />;
+                            break;
+                        }
+                        case "itemGenerator": {
+                            return <ItemGeneratorComponent />;
+                        }
+                        default:
+                            return null;
+                    }
+                })()}
+            </div>
+        </div>
+    );
 };
 export default Gen;

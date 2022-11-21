@@ -3113,7 +3113,7 @@ export class Panel extends EventTarget {
     await this.task(async ({signal}) => {
       const blob = await imageAiClient.createImageBlob(prompt, {signal});
       await this.setFile(blob, prompt);
-    }, 'generating image');
+    }, 'generating image...');
   }
 
   async compile() {
@@ -3125,7 +3125,7 @@ export class Panel extends EventTarget {
       for (const {name, type} of layer1Specs) {
         this.setData('layer1/' + name, compileResult[name], type);
       }
-    }, 'compiling');
+    }, 'compiling...');
   }
   async outmesh(renderer) {
     // console.log('outmesh start', renderer);
