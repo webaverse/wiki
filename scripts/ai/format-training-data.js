@@ -1,5 +1,4 @@
-import {capitalizeAllWords, isAllCaps} from '../../utils.js';
-import {getTrainingItems} from '../../datasets/dataset-specs.js';
+import { getTrainingItems } from '../../datasets/dataset-specs.js';
 
 //
 
