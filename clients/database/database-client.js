@@ -23,7 +23,7 @@ export class DatabaseClient {
         path: [
           'title',
         ],
-        valueText: title,
+        valueString: title,
       })
       .do()
       .then(res => {
