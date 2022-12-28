@@ -45,6 +45,7 @@ export const formatImages = async (md, type) => {
         if (match) {
             title = match[1].trim();
             url = match[2] ? match[2].trim() : title;
+            url = url.replaceAll("|","").trim();
             if (url) {
                 return `![${title}](/api/images/${type}s/${encodeURIComponent(
                     url
@@ -71,6 +72,102 @@ export const formatUrls = async (md) => {
         }
     );
     return md;
+};
+
+// Format Images For JONS format
+export const getImagesJSON = async (md, type) => {
+    let galleryArray = [];
+
+    const matc2 = md.match(/^([\s\S]*?)(\|[\s\S]*?)?$/);
+    //console.log(matc2)
+    md = md.replace(/\!\[([^\]]*?)\]\(([^\)]*?)\)/g, (all, title, url) => {
+        const match = title.match(/^([\s\S]*?)(\|[\s\S]*?)?$/);
+        if (match) {
+            title = match[1].trim();
+            //console.log(match)
+            url = match[2] ? match[2].trim() : title;
+            url = url.replaceAll("|","").trim();
+            if (url) {
+                galleryArray.push({
+                    //image: `![${title}](/api/images/${type}s/${encodeURIComponent(
+                     //   url
+                    //)}.png)`,
+                    title: title,
+                    prompt: url ? url : title,
+                    token: "",
+                    format: "png",
+                    url: "",
+                });
+            } else {
+                return null;
+            }
+        } else {
+            return all;
+        }
+    });
+    return galleryArray;
+};
+
+// Format parsed data to externally usable JSON
+
+export const formatParsedDataToJSON = async (rawJSON, type) => {
+    let JSON = rawJSON;
+    if (JSON?.Name) {
+        // FORMAT STATS
+        if (JSON?.Stats) {
+            let statsJson = {};
+            await JSON.Stats.split(",").map((element) => {
+                let trimmed = element.trim();
+                let stat = trimmed.split(" ");
+                statsJson[stat[0]] = stat[1];
+            });
+            JSON.Stats = statsJson;
+        }
+        // FORMAT DECOMPOSITION
+        if (JSON?.Decomposition) {
+            let decompositionJson = {};
+            await JSON.Decomposition.split(",").map((element) => {
+                let trimmed = element.trim();
+                let stat = trimmed.split(" ");
+                decompositionJson[stat[0]] = stat[1];
+            });
+            JSON.Decomposition = decompositionJson;
+        }
+        // FORMAT ORES
+        if (JSON?.Ores) {
+            let oresJson = {};
+            await JSON.Ores.split(",").map((element) => {
+                let trimmed = element.trim();
+                let stat = trimmed.split(" ");
+                oresJson[stat[0]] = stat[1];
+            });
+            JSON.Ores = oresJson;
+        }
+        // FORMAT IMAGE
+        if (JSON?.Image) {
+            const match = JSON.Image.match(/^([\s\S]*?)(\|[\s\S]*?)?$/);
+            let title = match[1].trim();
+            let url = match[2] ? match[2].trim() : title;
+            url = url.replaceAll("|","").trim();
+
+            JSON.Image = {
+                //image: `![${title}](/api/images/${type}s/${encodeURIComponent(
+                 //   url
+                //)}.png)`,
+                title: title,
+                prompt: url ? url : title,
+                token: "",
+                format: "png",
+                url: "",
+            }
+            
+        }
+        // FORMAT GALLERY
+        if(JSON['Image Gallery']) {
+            JSON['Image Gallery'] = await getImagesJSON(JSON['Image Gallery'], type);
+        }
+    }
+    return JSON;
 };
 
 // Format Sections

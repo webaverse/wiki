@@ -9,7 +9,7 @@ export class DatabaseClient {
     } */
     this.client = weaviate.client({
       scheme: 'http',
-      host: 'weaviate-server.webaverse.com',
+      host: 'weaviate.webaverse.com',
     });
   }
   async getByName(className, title) {
@@ -23,16 +23,17 @@ export class DatabaseClient {
         path: [
           'title',
         ],
-        valueString: title,
+        valueText: title,
       })
       .do()
-      /* .then(res => {
-        console.log(res)
+      .then(res => {
+        //console.log("Result", res)
+        return res;
       })
       .catch(err => {
         console.error(err)
-      }); */
-    // console.log('got result', JSON.stringify({className, title, result}, null, 2));
+      });
+    // console.log('got result', result?.data?.Get?.[className]?.[0]);
     return result?.data?.Get?.[className]?.[0];
   }
   async setByName(className, title, content) {

@@ -6,7 +6,6 @@ import CustomIcon from "../custom-icons";
 
 async function getSVG(iconName) {
     const icon = IconCollection.find((item) => item.name === iconName);
-    console.log("ICON: ", icon);
     return await fetch(icon.file)
         .then((res) => res.text())
         .then((res) => {

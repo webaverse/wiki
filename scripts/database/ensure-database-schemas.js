@@ -3,7 +3,7 @@ import schemas from '../../schemas/schemas.js';
 
 const client = weaviate.client({
   scheme: 'http',
-  host: 'weaviate-server.webaverse.com',
+  host: 'weaviate.webaverse.com',
 });
 
 (async () => {

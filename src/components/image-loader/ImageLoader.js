@@ -13,7 +13,7 @@ export const ImageLoader = ({ url, className, rerollable }) => {
     const imgLoad = (loadUrl) => {
         return new Promise(function (resolve, reject) {
             var request = new XMLHttpRequest();
-            console.log(loadUrl)
+            // console.log(loadUrl)
             request.open("GET", loadUrl);
             request.responseType = "blob";
             request.onprogress = function (pr) {

@@ -40,6 +40,68 @@ const hideSections = ["Name", "Class", "Image"];
 
 //
 
+async function testImage(prompt) {
+    let data = {
+        "data": [
+            prompt
+        ] 
+      }
+      let sdEndpoint = "https://stable-diffusion.webaverse.com/run/txt2img";
+      const response = await fetch("https://stable-diffusion.webaverse.com/run/txt2img", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          data: [
+            "hello world",
+            "hello world",
+            "None",
+            "None",
+            20,
+            "Euler a",
+            false,
+            false,
+            1,
+            1,
+            7,
+            -1,
+            -1,
+            0,
+            0,
+            0,
+            false,
+            512,
+            512,
+            false,
+            0.7,
+            0,
+            0,
+            "None",
+            false,
+            false,
+            false,
+            "hello world",
+            "Nothing",
+            "hello world",
+            "Nothing",
+            "hello world",
+            true,
+            false,
+            false,
+          ]
+        })})
+      .then(r => r.json())
+      .then(
+        r => {
+          let data = r.data;
+          return r.data[0][0];
+        }
+      );
+
+      const file = await fetch(`https://stable-diffusion.webaverse.com/file=${response.name}`)
+      console.log(file.arrayBuffer());
+
+}
+
 const ContentObject = ({ type, title, content }) => {
     const [itemName, setItemName] = useState("");
     const [itemClass, setItemClass] = useState("");
@@ -51,6 +113,9 @@ const ContentObject = ({ type, title, content }) => {
     const [editSource, setEditSource] = useState(false);
     const [formatedContent, setFormatedContent] = useState();
 
+    React.useEffect(() => {
+        testImage("Green Bear")
+    }, []);
     React.useEffect(() => {
         if (content) {
             formatImages(content, type).then((fiContent) => {

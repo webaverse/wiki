@@ -70,6 +70,8 @@ CharacterImage.getInitialProps = async (ctx) => {
 
         const imgUrl = c.storageClient.getUrl(hash, file.name);
 
+        console.log(imgUrl)
+
         return {
             imgUrl,
         };
@@ -97,6 +99,9 @@ CharacterImage.getInitialProps = async (ctx) => {
                 "IpfsData",
                 imageTitle
             );
+
+            console.log(imageQuery);
+            
             if (imageQuery) {
                 if (isReRoll) {
                     return await generateNewImage(

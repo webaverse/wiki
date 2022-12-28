@@ -3,6 +3,60 @@ import CustomButton from "../../src/components/custom-button";
 import { ImageLoader } from "../../src/components/image-loader/ImageLoader";
 import styles from "./WriterTools.module.css";
 
+async function generateImage(prompt) {
+    const response = await fetch("https://stable-diffusion.webaverse.com/run/txt2img", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          data: [
+            prompt,
+            prompt,
+            "None",
+            "None",
+            20,
+            "Euler a",
+            false,
+            false,
+            1,
+            1,
+            7,
+            -1,
+            -1,
+            0,
+            0,
+            0,
+            false,
+            512,
+            512,
+            false,
+            0.7,
+            0,
+            0,
+            "None",
+            false,
+            false,
+            false,
+            "hello world",
+            "Nothing",
+            "hello world",
+            "Nothing",
+            "hello world",
+            true,
+            false,
+            false,
+          ]
+        })})
+      .then(r => r.json())
+      .then(
+        r => {
+          let data = r.data;
+          return r.data[0][0];
+        }
+      );
+
+      return `https://stable-diffusion.webaverse.com/file=${response.name}`;
+}
+
 export const Character = (props) => {
     // States For saving dataset values
     // Do not change
@@ -223,6 +277,10 @@ ${formatedTrivia}
         setImageGallery(newImage);
     };
 
+    const hadleImageChange = (e,key) => {
+        setImage({ ...image, [key]: e.target.value });
+    };
+
     const addImage = () => {
         const galleryItem = {
             title: "",
@@ -236,10 +294,19 @@ ${formatedTrivia}
         setImageGallery(newGallery);
     };
 
+    const setMainImagePreview = () => {
+        console.log(image.prompt)
+        generateImage(image.prompt).then(res => {
+            setImage({ ...image, preview: res });
+        })
+    };
+
     const setGalPreview = (index) => {
-        const newImage = [...imageGallery];
-        newImage[index] = { ...newImage[index], preview: `/api/images/characters/${newImage[index].prompt}.png` };
-        console.log(`/api/images/characters/${newImage[index].prompt}.png`);
+        let newImage = [...imageGallery];
+        generateImage(newImage[index].prompt).then(res => {
+            newImage[index] = { ...newImage[index], preview: res };
+        })
+        console.log(newImage[index]);
         setImageGallery(newImage);
     };
 
@@ -374,23 +441,25 @@ ${formatedTrivia}
                                     <label>Title:</label>
                                     <input
                                         id="title"
-                                        onChange={(e) => handleStatsChange(e)}
+                                        onChange={(e) => hadleImageChange(e, "title")}
                                         value={image?.title}
                                     />
                                 </div>
                                 <div className={styles.imageDesc}>
                                     <label>Description/Prompt:</label>
                                     <textarea
-                                        id="description"
-                                        onChange={(e) => handleStatsChange(e)}
+                                        id="prompt"
+                                        onChange={(e) => hadleImageChange(e,"prompt")}
                                         value={image?.description}
                                     />
                                 </div>
                             </div>
                             <div className={styles.preview}>
-                                <label className={styles.generateButton}>Generate Preview</label>
+                                <label className={styles.generateButton} onClick={() => setMainImagePreview()}>Generate Preview</label>
                                 <div className={styles.generatePreview}>
-                                    <ImageLoader url={"/api/images/characters/Zelda.png"} />
+                                { image?.preview && (
+                                    <ImageLoader url={image.preview} />
+                                )}
                                 </div>
                             </div>
                         </div>
