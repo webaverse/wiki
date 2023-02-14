@@ -2,7 +2,7 @@ const schemas = [
   {
     "class": "Content",
     "description": "Webaverse content",
-    "properties": [
+    "properties": [ 
       {
         "dataType": [
           "string"

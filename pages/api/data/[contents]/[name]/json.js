@@ -28,7 +28,7 @@ export default async function handler(req, res) {
     const { contents, name } = req.query;
     let type = contents ? contents.replace(/s$/, "") : "";
     let setName = name ? name : "";
-
+    
     //name = decodeURIComponent(name);
     setName = cleanName(setName);
 
@@ -36,6 +36,8 @@ export default async function handler(req, res) {
     const title = `${type}/${setName}`;
     const id = uuidByString(title);
     const query = await c.databaseClient.getByName("Content", title);
+
+    console.log(query);
 
     if (query) {
         const { content: text } = query;
@@ -45,7 +47,7 @@ export default async function handler(req, res) {
         if (items.length > 0) {
             let jsonData = await formatParsedDataToJSON(items[0], type);
             res.json({
-                title: name,
+                title: title,
                 type: type,
                 content: jsonData,
                 error: null,
@@ -72,7 +74,7 @@ ${itemText}
         if (items.length > 0) {
             let jsonData = await formatParsedDataToJSON(items[0]);
             res.json({
-                title: name,
+                title: title,
                 type: type,
                 content: jsonData,
                 error: null,

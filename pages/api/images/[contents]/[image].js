@@ -65,9 +65,7 @@ CharacterImage.getInitialProps = async (ctx) => {
         });
         file.name = imageName;
         const hash = await c.storageClient.uploadFile(file);
-
         await c.databaseClient.setByName("IpfsData", imageTitle, hash);
-
         const imgUrl = c.storageClient.getUrl(hash, file.name);
 
         console.log(imgUrl)
@@ -99,7 +97,7 @@ CharacterImage.getInitialProps = async (ctx) => {
                 "IpfsData",
                 imageTitle
             );
-
+            
             console.log(imageQuery);
             
             if (imageQuery) {

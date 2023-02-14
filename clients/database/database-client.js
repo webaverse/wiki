@@ -20,10 +20,8 @@ export class DatabaseClient {
       .withFields('title content type')
       .withWhere({
         operator: 'Equal',
-        path: [
-          'title',
-        ],
-        valueString: title,
+        path: ['title'],
+        valueText: title,
       })
       .do()
       .then(res => {

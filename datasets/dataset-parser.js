@@ -157,6 +157,7 @@ export const parseDatasetItems = (md, datasetSpec, {
       const itemLine = itemLines[i];
 
       const match3 = itemLine.match(/^([@#]+ ?[\s\S]+?)(\*?):(?: )?(.*)(?:\n|$)/);
+
       if (match3 /* && !isAllCaps(name) */) {
         const name = match3[1];
         const asterisk = match3[2];
@@ -170,7 +171,7 @@ export const parseDatasetItems = (md, datasetSpec, {
         currentAttributeValue = value;
         currentAttributeAsterisk = !!asterisk;
       } else {
-        if (currentAttributeName) {
+        if (currentAttributeName ) {
           if (currentAttributeName === groupKey) {
             const itemAttributesClone = {...itemAttributes};
             itemAttributesClone[currentAttributeName] = itemLine;
@@ -184,9 +185,9 @@ export const parseDatasetItems = (md, datasetSpec, {
             }
             currentAttributeValue += itemLine;
           }
-        } else {
-          throw new Error('did not have item attribute context: ' + JSON.stringify({itemString, itemLines}, null, 2));
-        }
+        } //else {
+          //throw new Error('did not have item attribute context: ' + JSON.stringify({itemString, itemLines}, null, 2));
+        //}
       }
     }
     if (currentAttributeName) {
