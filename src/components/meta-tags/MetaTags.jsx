@@ -1,10 +1,10 @@
-import Head from "next/head";
+// import Head from "next/head";
 import React from "react";
 
 export const MetaTags = (props) => {
     const { title, description, image, url } = props;
     return (
-        <Head>
+        <head>
             <title>{title}</title>
             <meta name="description" content={description} />
 
@@ -30,6 +30,6 @@ export const MetaTags = (props) => {
             <meta property="og:image" content={image} />
             <meta property="og:description" content={description} />
             <meta property="og:site_name" content="Webaverse Wiki" />
-        </Head>
+        </head>
     );
 };
