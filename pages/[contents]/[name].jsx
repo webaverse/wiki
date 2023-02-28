@@ -1,5 +1,4 @@
 import uuidByString from "uuid-by-string";
-import Head from "next/head";
 
 import styles from "../../styles/ContentObject.module.css";
 import { Ctx, saveContent } from "../../clients/context.js";
@@ -225,7 +224,6 @@ const ContentObject = ({ type, title, content }) => {
         </div>
     );
 };
-
 ContentObject.getInitialProps = async (ctx) => {
     const { req } = ctx;
     const match = req.url.match(/^\/([^\/]*)\/([^\/]*)/);
