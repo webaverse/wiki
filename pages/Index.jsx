@@ -6,6 +6,9 @@ import {
 import React from 'react';
 
 import {
+  useRouter,
+} from '../src/utils/router.js';
+import {
   getDatasetSpecs,
 } from '../datasets/dataset-specs.js';
 import ContentObject from './[contents]/[name].jsx';
@@ -20,18 +23,20 @@ import {Ctx} from "../clients/context.js";
 // } from './components/io-bus/IoBusEventSource.jsx';
 
 import styles from '../styles/Index.module.css';
-import { stripBasename } from '@remix-run/router';
 
 // let loaded = false;
 
 let loaded = false;
 export const Index = () => {
-  const [initialProps, setInitialProps] = useState(null);
+  // const [initialProps, setInitialProps] = useState(null);
+  const [router, setRouter] = useState(() => useRouter());
+  // const [tab, setTab] = useState(router.currentTab);
+  const [slugs, setSlugs] = useState(router.currentSlugs);
   const [ctx, setCtx] = useState(() => new Ctx());
   const [results, setResults] = useState([]);
   const [type, setType] = useState('');
   const [types, setTypes] = useState([]);
-  const [name, setName] = useState('');
+  const [nameValue, setNameValue] = useState('');
   const [text, setText] = useState('');
 
   //
@@ -40,12 +45,29 @@ export const Index = () => {
   
   //
 
-  const url = location.href;
-  const pathname = location.pathname;
-  const match = pathname.match(/^\/([^\/]+)\/([^\/]+)/);
+  // const url = location.href;
+  // const pathname = location.pathname;
+  // const match = pathname.match(/^\/([^\/]+)\/([^\/]+)/);
 
   //
 
+  // router
+  useEffect(() => {
+    const slugschange = e => {
+      const {
+        slugs,
+      } = e.data;
+      console.log('slugs change', {slugs});
+      setSlugs(slugs);
+    };
+    router.addEventListener('slugschange', slugschange);
+    
+    return () => {
+      router.removeEventListener('slugschange', slugschange);
+    };
+  }, [router]);
+
+  // load types array
   useEffect(() => {
     let live = true;
 
@@ -64,6 +86,7 @@ export const Index = () => {
     };
   }, []);
 
+  /* // load match
   useEffect(() => {
     if (!loaded) {
       loaded = true;
@@ -84,7 +107,7 @@ export const Index = () => {
         })();
       }
     }
-  }, []);
+  }, []); */
 
   useEffect(() => {
     if (text) {
@@ -108,53 +131,100 @@ export const Index = () => {
     }
   }, [text]);
 
+  const mode = slugs?.[0] ?? '';
+  const tab = slugs?.[1] ?? '';
+  const name = slugs?.[2] ?? '';
+
   return (
     <div className={styles.container}>
-      {match ? (
-        <div>
-        </div>
-      ) : (
-        <div>
-          <div className={styles.row}>
-            <select className={styles.select} value={type} onChange={e => {
-              setType(e.target.value);
-            }}>
-              {types.map(type => (
-                <option key={type} value={type}>{type}</option>
-              ))}
-            </select>
-            <input type="text" value={name} placeholder="name" onChange={e => {
-              setName(e.target.value);
-            }} />
-            <input type="button" value="Go" onClick={e => {
-              console.log('click go', e);
-            }} />
-            <input type="button" value="List" onClick={e => {
-              console.log('click list', e);
-            }} />
-            <input type="button" value="Spec" onClick={e => {
-              console.log('click spec', e);
-            }} />
-          </div>
-          <div className={styles.search}>
-            <input type="text" className={styles.input} value={text} onChange={e => {
-              setText(e.target.value);
-            }} />
-            <div className={styles.results}>
-              {
-                results.map((result, index) => {
-                  const text = result.Description ?? result.Biography ?? '';
-                  return (
-                    <div className={styles.result} key={index} onClick={e => {
-                      console.log('click result', result, e);
-                    }}>{text}</div>
-                  );
-                })
+      {(() => {
+        switch (mode) {
+          case '': {
+            return (
+              <div>
+                <div className={styles.row}>
+                  <select className={styles.select} value={type} onChange={e => {
+                    setType(e.target.value);
+                  }}>
+                    {types.map(type => (
+                      <option key={type} value={type}>{type}</option>
+                    ))}
+                  </select>
+                  <input type="text" value={nameValue} placeholder="name" onChange={e => {
+                    setNameValue(e.target.value);
+                  }} />
+                  <input type="button" value="Go" onClick={e => {
+                    console.log('click go', e);
+                    if (nameValue) {
+                      router.pushUrl(location.protocol + '//' + location.host + `/content/${type}/${nameValue}`);
+                    }
+                  }} />
+                  <input type="button" value="List" onClick={e => {
+                    console.log('click list', e);
+                    router.pushUrl(location.protocol + '//' + location.host + `/content/${type}`);
+                  }} />
+                  <input type="button" value="Spec" onClick={e => {
+                    console.log('click spec', e);
+                    router.pushUrl(location.protocol + '//' + location.host + `/specs/${type}/${name}`);
+                  }} />
+                </div>
+                <div className={styles.search}>
+                  <input type="text" className={styles.input} value={text} onChange={e => {
+                    setText(e.target.value);
+                  }} />
+                  <div className={styles.results}>
+                    {
+                      results.map((result, index) => {
+                        const text = result.Description ?? result.Biography ?? '';
+                        return (
+                          <div className={styles.result} key={index} onClick={e => {
+                            console.log('click result', result, e);
+                            const {Name} = result;
+                            router.pushUrl(location.protocol + '//' + location.host + `/specs/${type}/${Name}`);
+                          }}>{text}</div>
+                        );
+                      })
+                    }
+                  </div>
+                </div>
+              </div>
+            );
+          }
+          case 'content': {
+            switch (tab) {
+              case 'character': {
+                return (
+                  <div className={styles.characters}>
+                    Characters
+                  </div>
+                );
               }
-            </div>
-          </div>
-        </div>
-      )}
+              case 'setting': {
+                return (
+                  <div className={styles.characters}>
+                    Settings
+                  </div>
+                );
+              }
+              default: {
+                console.warn('unknown tab', tab);
+                return null;
+              }
+            }
+          }
+          case 'specs': {
+            return (
+              <div className={styles.specs}>
+                Specs for {type}
+              </div>
+            );
+          }
+          default: {
+            console.warn('unknown mode', mode);
+            return null;
+          }
+        }
+      })()}
     </div>
   );
 };
