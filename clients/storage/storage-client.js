@@ -29,8 +29,21 @@ const _hashHashes = hashes => {
 
 //
 
+const region = 'us-west-2';
+const bucketName = 'wiki.webaverse.com';
+const urlBase = `https://s3.${region}.amazonaws.com`;
+
+//
+
 export class StorageClient {
-  constructor() {
+  constructor({
+    accessKeyId,
+    secretAccessKey,
+  }) {
+    if (!accessKeyId || !secretAccessKey) {
+      throw new Error('no aws access key found');
+    }
+
     /* const w3sApiKey = process.env.W3S_API_KEY;
     if (!w3sApiKey) {
       throw new Error('no w3s api key found');
@@ -38,13 +51,6 @@ export class StorageClient {
     this.client = new Web3Storage({
       token: w3sApiKey,
     }); */
-
-    const region = globalThis?.process?.env?.AWS_REGION || 'us-west-2';
-    const accessKeyId = globalThis?.process?.env?.AWS_ACCESS_KEY_ID_WEBAVERSE;
-    const secretAccessKey = globalThis?.process?.env?.AWS_SECRET_ACCESS_KEY_WEBAVERSE;
-    const bucketName = globalThis?.process?.env?.AWS_BUCKET_NAME_WEBAVERSE || 'wiki.webaverse.com';
-    // const endpoint = globalThis?.process?.env?.AWS_ENDPOINT_WEBAVERSE;
-    const urlBase = globalThis?.process?.env?.AWS_S3_URL_BASE_WEBAVERSE || `https://s3.${region}.amazonaws.com`;
 
     // if (!accessKeyId || !secretAccessKey) {
     //   throw new Error('no aws access key found');

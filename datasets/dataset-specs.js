@@ -21,8 +21,8 @@ const fetchText = async u => {
 
 //
 
-const datasetSpecsBasePath = `https://webaverse.github.io/lore/datasets/specs/`;
-const datasetDataBasePath = `https://webaverse.github.io/lore/datasets/data/`;
+const datasetSpecsBasePath = `/lore/datasets/specs/`;
+const datasetDataBasePath = `/lore/datasets/data/`;
 const mdSpecs = [
   {
     // type: 'character',
@@ -53,19 +53,19 @@ const mdSpecs = [
     url: 'battle-banters.md',
     // groupKey: 'Banters',
   },
-  {
-    // type: 'match',
-    url: 'matches.md',
-    // nameKey: 'Match string',
-    // descriptionKey: 'Candidate assets',
-  },
+  // {
+  //   // type: 'match',
+  //   url: 'matches.md',
+  //   // nameKey: 'Match string',
+  //   // descriptionKey: 'Candidate assets',
+  // },
 ];
 const datasetSpecUrls = mdSpecs.map(mdSpec => `${datasetSpecsBasePath}${mdSpec.url}`);
 const datasetDataUrls = mdSpecs.map(mdSpec => `${datasetDataBasePath}${mdSpec.url}`);
 
 //
 
-let datasetSpecPromise = null;
+/* let datasetSpecPromise = null;
 export const getDatasetSpecs = () => {
   if (!datasetSpecPromise) {
     datasetSpecPromise = (async () => {
@@ -78,16 +78,46 @@ export const getDatasetSpecs = () => {
     })();
   }
   return datasetSpecPromise;
+}; */
+let datasetSpecMdPromise = null;
+export const getDatasetSpecsMd = () => {
+  if (!datasetSpecMdPromise) {
+    datasetSpecMdPromise = (async () => {
+      const datasetSpecs = await Promise.all(datasetSpecUrls.map(async datasetSpecUrl => {
+        const type = datasetSpecUrl.match(/\/([^/]+?)s?\.md$/)[1];
+        const mdText = await fetchText(datasetSpecUrl);
+        return {
+          type,
+          markdown: mdText,
+        };
+        // const datasetSpec = parseDatasetSpec(mdText);
+        // return datasetSpec;
+      }));
+      return datasetSpecs;
+    })();
+  }
+  return datasetSpecMdPromise;
 };
 
-export const getTrainingItems = async () => {
-  const datasetSpecs = await getDatasetSpecs();
-  const itemsArray = await Promise.all(datasetDataUrls.map(async (datasetDataUrl, index) => {
-    const mdText = await fetchText(datasetDataUrl);
-    const datasetSpec = datasetSpecs[index];
-    let items = parseDatasetItems(mdText, datasetSpec);
-    items = items.map(item => formatTrainingItemCandidates(item, datasetSpec)).flat();
-    return items;
-  }));
-  return itemsArray.flat();
+let datasetSamplesPromise = null;
+export const getDatasetSamplesMd = () => {
+  if (!datasetSamplesPromise) {
+    datasetSamplesPromise = (async () => {
+      // const datasetSpecs = await getDatasetSpecsMd();
+      const datasetSamples = await Promise.all(datasetDataUrls.map(async (datasetDataUrl, index) => {
+        const type = datasetDataUrl.match(/\/([^/]+?)s?\.md$/)[1];
+        const mdText = await fetchText(datasetDataUrl);
+        return {
+          type,
+          markdown: mdText,
+        };
+        // const datasetSpec = datasetSpecs[index];
+        // let items = parseDatasetItems(mdText, datasetSpec);
+        // items = items.map(item => formatTrainingItemCandidates(item, datasetSpec)).flat();
+        // return items;
+      }));
+      return datasetSamples;
+    })();
+  }
+  return datasetSamplesPromise;
 };

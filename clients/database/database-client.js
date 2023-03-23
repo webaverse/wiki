@@ -21,17 +21,19 @@ export class DatabaseClient {
   }) {
     this.aiClient = aiClient;
 
+    // globalThis.aiClient = aiClient;
+
     if (!aiClient) {
       console.warn('ai client is required');
       debugger;
     }
 
-    // globalThis.initDatabase = () => {
-    //   this.init();
-    // };
+    globalThis.initDatabase = () => {
+      this.init();
+    };
     
     // this.qdrant = new Qdrant('http://localhost:6333/');
-    const databaseBaseUrl = location.protocol + '//' + location.host + '/api/qdrant/';
+    const databaseBaseUrl = 'https://local.webaverse.com:4444/api/qdrant/';
     this.qdrant = new Qdrant(databaseBaseUrl);
   }
 
@@ -72,7 +74,7 @@ export class DatabaseClient {
     for (let i = 0; i < datasetSpecs.length; i++) {
       const datasetSpec = datasetSpecs[i];
       const {type} = datasetSpec;
-      console.log('initializing', {type});
+      // console.log('initializing', {type});
 
       const name = type;
 
@@ -170,7 +172,7 @@ export class DatabaseClient {
       payload: true,
     };
     const qdrantResponse = await this.qdrant.search_collection(type, vector, k, ef, filter, opts);
-    // console.log('got response', qdrantResponse);
+    console.log('got response', qdrantResponse);
     const {
       response,
     } = qdrantResponse;
@@ -181,32 +183,61 @@ export class DatabaseClient {
   }
   async getItem(type, key) {
     const id = this.#getId(type, key);
-    const points = await this.qdrant.retrieve_points(type, {
+    const qdrantResponse = await this.qdrant.retrieve_points(type, {
       ids: [
         id,
       ],
+      with_payload: true,
+      with_vectors: true,
     });
-    // console.log('got item', points);
+    // console.log('get item', {id, type, key}, qdrantResponse);
+    // console.log('got item', qdrantResponse);
     
+    const {
+      response,
+    } = qdrantResponse;
+    const {
+      result,
+    } = response;
+
     // debugger;
     
-    return points;
+    return result?.[0]?.payload;
   }
   async getItems(type, keys) {
     const ids = keys.map(key => this.#getId(type, key));
     const points = await this.qdrant.retrieve_points(type, {
       ids,
+      with_payload: true,
+      with_vectors: true,
     });
     return points;
   }
   async setItem(type, key, value) {
     const id = this.#getId(type, key);
-    const vector = await this.aiClient.embed(value);
-    await this.qdrant.upload_points(type, [{
+    // console.log('set item', {id, type, key});
+    
+    // if (typeof value === 'string') {
+    //   throw new Error('value must be an object');
+    // }
+
+    const valueString = JSON.stringify(value);
+    const vector = await this.aiClient.embed(valueString);
+    
+    const newPoints = [{
       id,
       payload: value,
       vector,
-    }]);
+    }];
+    const res2 = await this.qdrant.upload_points(type, newPoints);
+    // console.log('upload points', newPoints, res2);
+
+    // const points = await this.qdrant.retrieve_points(type, {
+    //   ids: [
+    //     id,
+    //   ],
+    // });
+    // console.log('post-set points', points);
     return id;
   }
   async deleteItem(type, id) {
@@ -214,4 +245,4 @@ export class DatabaseClient {
       id,
     ]);
   }
-  }
+}

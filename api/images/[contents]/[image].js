@@ -1,8 +1,7 @@
 import stream from "stream";
-import { Ctx } from "../../../../clients/context.js";
-import { getDatasetSpecs } from "../../../../datasets/dataset-specs.js";
-import { cleanName } from "../../../../utils.js";
-import { generateImage } from "../../../../media/images/image-generator.js";
+import { Ctx } from "../../../clients/context.js";
+import { cleanName } from "../../../utils.js";
+import { generateImage } from "../../../media/images/image-generator.js";
 
 //
 
@@ -33,29 +32,33 @@ const getInitialProps = async (ctx) => {
     const { req } = ctx;
 
     // Check if ?reroll=true is passed in the query
-    const isReRoll = req.query?.reroll;
+    const isReRoll = !!req.query?.reroll;
+    const modelName = req.query?.model ?? null;
 
     console.log(req.url);
     // Clean url from passed values after ?
     const reqUrlClean = req.url.replace(/\?.*$/, "");
-
     const match = reqUrlClean.match(/^\/api\/images\/([^\/]*)\/([^\/]*)\.png$/);
+    // console.log('image match', match);
+
+    const c = new Ctx(process.env);
 
     // Moved the generate image to a reusable function
     // so it can be called to re-generate the image as well
     const generateNewImage = async (
-        datasetSpec,
+        // datasetSpec,
         description,
         imageName,
         imageTitle
     ) => {
-        const c = new Ctx();
-        const { imagePrompt } = datasetSpec;
+        const c = new Ctx(process.env);
+        // const { imagePrompt } = datasetSpec;
 
         const generateCharacterImage = generateImage({
-            modelName: null,
+            modelName,
             // suffix: 'anime style video game character concept, full body',
-            suffix: `${imagePrompt}, ${globalImagePrompt}`,
+            // suffix: `${imagePrompt}, ${globalImagePrompt}`,
+            // suffix: imagePrompt,
             // seed: [512, 512, 64, 128, 1, 256],
         });
         let imgArrayBuffer = await generateCharacterImage(description); // XXX make this based on the type
@@ -66,7 +69,10 @@ const getInitialProps = async (ctx) => {
         file.name = imageName;
         const hash = await c.storageClient.uploadFile(file);
 
-        await c.databaseClient.setByName("IpfsData", imageTitle, hash);
+        // console.log('image query set', imageTitle, hash);
+        await c.databaseClient.setByName("IpfsData", imageTitle, {
+            hash,
+        });
 
         const imgUrl = c.storageClient.getUrl(hash, file.name);
 
@@ -83,45 +89,38 @@ const getInitialProps = async (ctx) => {
         let description = match[2];
         description = decodeURIComponent(description);
         description = cleanName(description);
+        
+        const imageTitle = `images/${type}/${description}`;
+        const imageName = `${description}.png`;
 
-        const datasetSpecs = await getDatasetSpecs();
-        const datasetSpec = datasetSpecs.find(
-            (spec) => spec.type === singleType
+        const imageQuery = await c.databaseClient.getByName(
+            "IpfsData",
+            imageTitle
         );
-        if (datasetSpec) {
-            const imageTitle = `images/${type}/${description}`;
-            const imageName = `${description}.png`;
-
-            const c = new Ctx();
-            const imageQuery = await c.databaseClient.getByName(
-                "IpfsData",
-                imageTitle
-            );
-            if (imageQuery) {
-                if (isReRoll) {
-                    return await generateNewImage(
-                        datasetSpec,
-                        description,
-                        imageName,
-                        imageTitle
-                    );
-                } else {
-                    const { content: ipfsHash } = imageQuery;
-                    const imgUrl = c.storageClient.getUrl(ipfsHash, imageName);
-                    return {
-                        imgUrl,
-                    };
-                }
-            } else {
+        console.log('image query 1', imageQuery, imageTitle)
+        if (imageQuery) {
+            if (isReRoll) {
                 return await generateNewImage(
-                    datasetSpec,
+                    // datasetSpec,
                     description,
                     imageName,
                     imageTitle
                 );
+            } else {
+                // const { content: ipfsHashSpec } = imageQuery;
+                const { hash: ipfsHash } = imageQuery;
+                const imgUrl = c.storageClient.getUrl(ipfsHash, imageName);
+                return {
+                    imgUrl,
+                };
             }
         } else {
-            return null;
+            return await generateNewImage(
+                // datasetSpec,
+                description,
+                imageName,
+                imageTitle
+            );
         }
     } else {
         return null;

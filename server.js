@@ -14,6 +14,7 @@ import * as vite from 'vite';
 import {
   AiServer,
 } from './servers/ai-server.js'
+import handleApiImage from './api/images/[contents]/[image].js';
 
 //
 
@@ -27,7 +28,12 @@ if (!OPENAI_API_KEY || !OPENAI_ACCESS_TOKEN) {
   throw new Error('backend missing OPENAI_API_KEY or OPENAI_ACCESS_TOKEN');
 }
 process.env.VITE_OPENAI_API_KEY = OPENAI_API_KEY;
-process.env.VITE_OPENAI_ACCESS_TOKEN = OPENAI_ACCESS_TOKEN;
+// process.env.VITE_OPENAI_ACCESS_TOKEN = OPENAI_ACCESS_TOKEN;
+process.env.VITE_AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
+process.env.VITE_AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY;
+if (!process.env.VITE_AWS_ACCESS_KEY || !process.env.VITE_AWS_SECRET_ACCESS_KEY) {
+  throw new Error('backend missing AWS_ACCESS_KEY or AWS_SECRET_ACCESS_KEY');
+}
 
 //
 
@@ -119,9 +125,16 @@ const aiServer = new AiServer({
 (async () => {
   const app = express();
 
-  app.all('*', async (req, res, next) => {
+  app.all('*', (req, res, next) => {
     _setHeaders(res);
 
+    if (req.method === 'OPTIONS') {
+      res.end();
+    } else {
+      next();
+    }
+  });
+  app.all('*', async (req, res, next) => {
     // console.log('url start', req.url);
     if ([
       '/api/ai/',
@@ -130,9 +143,15 @@ const aiServer = new AiServer({
       await aiServer.handleRequest(req, res);
     } else if (req.url.startsWith('/api/qdrant/')) {
       const url = req.url.slice('/api/qdrant'.length);
-      console.log('proxy qdrant request', url, req.url);
+      // console.log('proxy qdrant request', url, req.url);
       const u = `http://127.0.0.1:${DATABASE_PORT}${url}`;
       _proxyUrl(req, res, u);
+    } else if ([
+      '/api/images/',
+    ].some(prefix => req.url.startsWith(prefix))) {
+      console.log('got images api hit', req.url);
+      // req.url = req.url.slice('/api'.length);
+      handleApiImage(req, res);
     } else {
       next();
     }

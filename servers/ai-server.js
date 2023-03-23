@@ -89,13 +89,15 @@ export class AiServer {
   }
   async handleRequest(req, res) {
     try {
-      console.log('ai server handle request', req.url);
+      console.log('ai server handle request xxx', req.url);
 
       let match;
-      if (match = req.url.match(/^\/api\/ai\/(completions|embeddings)/)) {
+      if (match = req.url.match(/^\/api\/ai\/(chat\/completions|completions|embeddings)/)) {
         const sub = match[1];
 
-        // console.log('match 1', match);
+        console.log('match 1', match);
+
+        console.log('wiki ai proxy', {sub});
 
         const proxyRes = await fetch(`https://api.openai.com/v1/${sub}`, {
           method: 'POST',
@@ -119,7 +121,7 @@ export class AiServer {
       } else if (match = req.url.match(/^\/api\/image-ai\/([^\/\?]+)/)) {
         const method = match[1];
 
-        // console.log('match 2', match);
+        console.log('match 2', match);
 
         switch (method) {
           case 'createImageBlob': {

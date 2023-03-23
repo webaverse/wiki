@@ -13,11 +13,12 @@ body {
   margin: 0;
   font-family: "TTSC-Regular", -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-    /* height: 100vh;
-    width: 100vw; */
-    /* overflow-x: hidden;
-    overflow-y: scroll; */
     color: #FFFFFF;
+}
+
+/* hide body scrollbar */
+body::-webkit-scrollbar {
+  display: none;
 }
 
 a {

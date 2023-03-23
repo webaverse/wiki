@@ -10,6 +10,22 @@ const arrayEquals = (a, b) => {
     return true;
   }
 };
+const objectEquals = (a, b) => {
+  const aKeys = Object.keys(a);
+  const bKeys = Object.keys(b);
+  if (aKeys.length !== bKeys.length) {
+    return false;
+  } else {
+    for (const k of aKeys) {
+      if (a[k] !== b[k]) {
+        return false;
+      }
+    }
+    return true;
+  }
+};
+
+//
 
 class Router extends EventTarget {
   constructor() {
@@ -36,11 +52,14 @@ class Router extends EventTarget {
     const u = new URL(urlString);
     const pathname = u.pathname;
     const slugs = pathname.replace(/^\//, '').split('/');
-    if (!arrayEquals(this.currentSlugs, slugs)) {
+    const query = Object.fromEntries(u.searchParams.entries());
+    if (!arrayEquals(this.currentSlugs, slugs) || !objectEquals(this.currentQuery, query)) {
       this.currentSlugs = slugs;
+      this.currentQuery = query;
       this.dispatchEvent(new MessageEvent('slugschange', {
         data: {
           slugs,
+          query,
         },
       }));
     }

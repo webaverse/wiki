@@ -2,9 +2,11 @@
   height: 34px;
   background-color: #0d1a22;
   min-width: 40px;
-  position: absolute;
-  top: 32px;
-  right: 40px;
+  position: relative;
+  margin-top: 10px;
+  margin-left: 50px;
+  /* top: 32px;
+  right: 40px; */
   z-index: 2;
 }
 

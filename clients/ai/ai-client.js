@@ -1,8 +1,7 @@
-import {model} from '../../constants/model-constants.js';
-import {OPENAI_API_KEY} from '../../src/constants/auth.js';
-import {
-  ChatGPTClient,
-} from '../../../engine/ai/chat/chatgpt.js';
+// import {model} from '../../constants/model-constants.js';
+// import {
+//   ChatGPTClient,
+// } from '../../../engine/ai/chat/chatgpt.js';
 
 //
 
@@ -104,22 +103,22 @@ function makeCreateChatFn({
   });
 }
 
-export class AiClient {
-  constructor({
-    apiKey,
-    accessToken,
-  }) {
-    this.generate = makeGenerateFn({
-      apiKey,
-    });
-    this.embed = makeEmbedFn({
-      apiKey,
-    });
-    this.createChat = makeCreateChatFn({
-      accessToken,
-    });
-  }
-};
+// export class AiClient {
+//   constructor({
+//     apiKey,
+//     accessToken,
+//   }) {
+//     this.generate = makeGenerateFn({
+//       apiKey,
+//     });
+//     this.embed = makeEmbedFn({
+//       apiKey,
+//     });
+//     this.createChat = makeCreateChatFn({
+//       accessToken,
+//     });
+//   }
+// };
 
 
 

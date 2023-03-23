@@ -3,6 +3,10 @@ import classnames from "classnames";
 import styles from "./UserBox.module.css";
 import CustomButton from "../custom-button";
 
+import {
+    IoBus,
+} from '../../../../../pages/components/io-bus/IoBus.js';
+
 export const UserBox = ({ className }) => {
     const loggedIn = false;
     const [ open , setOpen] = useState(false);
@@ -50,7 +54,17 @@ export const UserBox = ({ className }) => {
                                 icon="login"
                                 size={28}
                                 className={styles.loginButton}
-                                onClick={() => setOpen(true)}
+                                // onClick={() => setOpen(true)}
+                                onClick={e => {
+                                    // console.log('inner toggle wiki');
+
+                                    IoBus.request({
+                                        contentWindow: globalThis.parent,
+                                        method: 'toggleWiki',
+                                        args: {
+                                        },
+                                    });
+                                }}
                             />
                         </li>
                     </>
