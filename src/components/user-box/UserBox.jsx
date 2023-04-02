@@ -2,7 +2,10 @@ import React, { useState, useEffect, useContext } from "react";
 import classnames from "classnames";
 import styles from "./UserBox.module.css";
 import CustomButton from "../custom-button";
-import Link from "next/link";
+
+import {
+    IoBus,
+} from '../../../../../pages/components/io-bus/IoBus.js';
 
 export const UserBox = ({ className }) => {
     const loggedIn = false;
@@ -51,7 +54,17 @@ export const UserBox = ({ className }) => {
                                 icon="login"
                                 size={28}
                                 className={styles.loginButton}
-                                onClick={() => setOpen(true)}
+                                // onClick={() => setOpen(true)}
+                                onClick={e => {
+                                    // console.log('inner toggle wiki');
+
+                                    IoBus.request({
+                                        contentWindow: globalThis.parent,
+                                        method: 'toggleWiki',
+                                        args: {
+                                        },
+                                    });
+                                }}
                             />
                         </li>
                     </>

@@ -3,6 +3,9 @@ import classnames from "classnames";
 import styles from "./ImageLoader.module.css";
 
 export const ImageLoader = ({ url, className, rerollable }) => {
+    if (/\-(\%20| )/.test(url)) {
+        debugger;
+    }
     const [loading, setLoading] = useState(true);
     const [loadingProgress, setLoadingProgress] = useState("0%");
     const [ imageUrl , setImageUrl ] = useState(url);
@@ -15,8 +18,8 @@ export const ImageLoader = ({ url, className, rerollable }) => {
             setLoadingProgress('Generating');
             setLoading(true)
             let xmlHTTP = new XMLHttpRequest();
-            console.log(`${url}${reroll && '?reroll=true'}`);
-            xmlHTTP.open("GET", `${url}${reroll && '?reroll=true'}`, true);
+            console.log(`${url}${reroll ? '?reroll=true' : ''}`);
+            xmlHTTP.open("GET", `${url}${reroll ? '?reroll=true' : ''}`, true);
             xmlHTTP.onprogress = function (pr) {
                 setImageUrl(url);
                 setLoadingProgress(`${Math.round((pr.loaded * 100) / pr.total)}%`);

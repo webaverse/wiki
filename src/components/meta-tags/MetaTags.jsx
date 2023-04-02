@@ -1,17 +1,18 @@
-import Head from "next/head";
+// import Head from "next/head";
 import React from "react";
 
 export const MetaTags = (props) => {
     const { title, description, image, url } = props;
+    return null; // XXX
     return (
-        <Head>
+        <head>
             <title>{title}</title>
             <meta name="description" content={description} />
 
             {/* Schema.org markup for Google+ */}
-            <meta itemprop="name" content={title} />
-            <meta itemprop="description" content={description} />
-            <meta itemprop="image" content={image} />
+            <meta itemProp="name" content={title} />
+            <meta itemProp="description" content={description} />
+            <meta itemProp="image" content={image} />
 
             {/* Twitter Card data */}
             <meta name="twitter:card" content="summary_large_image" />
@@ -30,6 +31,6 @@ export const MetaTags = (props) => {
             <meta property="og:image" content={image} />
             <meta property="og:description" content={description} />
             <meta property="og:site_name" content="Webaverse Wiki" />
-        </Head>
+        </head>
     );
 };

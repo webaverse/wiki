@@ -6,7 +6,7 @@ import styles from "./Sections.module.css";
 export const RightSection = (props) => {
     const { title, content, index } = props;
     return (
-        <div className={styles.rightSection} key={index}>
+        <div className={styles.rightSection}>
             <div className={styles.label}>{title}:</div>
             <div className={styles.value}>
                 <Markdown gfm openLinksInNewTab={false}>

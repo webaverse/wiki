@@ -46,9 +46,10 @@ export const formatImages = async (md, type) => {
             title = match[1].trim();
             url = match[2] ? match[2].trim() : title;
             if (url) {
-                return `![${title}](/api/images/${type}s/${encodeURIComponent(
+                const result = `![${title}](/api/images/${type}s/${encodeURIComponent(
                     url
                 )}.png)`;
+                return result;
             } else {
                 return null;
             }
@@ -84,10 +85,11 @@ export const getSections = async (content) => {
     const sections = [];
     const sectionsArray = content.split(sectionSeperator);
     await sectionsArray.map((section) => {
+        section = section.trim();
         if (section) {
             let sectionItem = {
-                title: section.split(titleDescriptionSeperator)[0].trim(),
-                content: section.split(titleDescriptionSeperator)[1].trim(),
+                title: section ? section.split(titleDescriptionSeperator)[0].trim() : '',
+                content: section ? section.split(titleDescriptionSeperator)[1].trim() : '',
             };
             sections.push(sectionItem);
         }
@@ -117,4 +119,24 @@ export const getGalleryArray = async (content) => {
 
 export function mod(v, n) {
     return ((v % n) + n) % n;
+}
+
+export function shuffle(array, rng = Math.random) {
+  let currentIndex = array.length;
+    let randomIndex;
+
+  // While there remain elements to shuffle...
+  while (currentIndex !== 0) {
+    // Pick a remaining element...
+    randomIndex = Math.floor(rng() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex],
+      array[currentIndex],
+    ];
+  }
+
+  return array;
 }

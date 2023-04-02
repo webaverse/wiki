@@ -29,8 +29,21 @@ const _hashHashes = hashes => {
 
 //
 
+const region = 'us-west-2';
+const bucketName = 'wiki.webaverse.com';
+const urlBase = `https://s3.${region}.amazonaws.com`;
+
+//
+
 export class StorageClient {
-  constructor() {
+  constructor({
+    accessKeyId,
+    secretAccessKey,
+  }) {
+    if (!accessKeyId || !secretAccessKey) {
+      throw new Error('no aws access key found');
+    }
+
     /* const w3sApiKey = process.env.W3S_API_KEY;
     if (!w3sApiKey) {
       throw new Error('no w3s api key found');
@@ -39,16 +52,9 @@ export class StorageClient {
       token: w3sApiKey,
     }); */
 
-    const region = process.env.AWS_REGION || 'us-west-2';
-    const accessKeyId = process.env.AWS_ACCESS_KEY_ID_WEBAVERSE;
-    const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY_WEBAVERSE;
-    const bucketName = process.env.AWS_BUCKET_NAME_WEBAVERSE || 'wiki.webaverse.com';
-    const endpoint = process.env.AWS_ENDPOINT_WEBAVERSE;
-    const urlBase = process.env.AWS_S3_URL_BASE_WEBAVERSE || `https://s3.${region}.amazonaws.com`;
-
-    if (!accessKeyId || !secretAccessKey) {
-      throw new Error('no aws access key found');
-    }
+    // if (!accessKeyId || !secretAccessKey) {
+    //   throw new Error('no aws access key found');
+    // }
 
     let s3ClientConfig = {
       region,
@@ -59,10 +65,10 @@ export class StorageClient {
       },
     };
 
-    // Allow overwriting the S3 endpoint URL for testing purposes
-    if (endpoint) {
-      s3ClientConfig.endpoint = endpoint;
-    }
+    // // Allow overwriting the S3 endpoint URL for testing purposes
+    // if (endpoint) {
+    //   s3ClientConfig.endpoint = endpoint;
+    // }
 
     this.bucketUrlBase = `${urlBase}/${bucketName}`;
 

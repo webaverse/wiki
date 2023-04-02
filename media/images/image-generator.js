@@ -1,4 +1,7 @@
-import {stableDiffusionUrl} from '../../constants/endpoints-constants.js';
+import {
+  // stableDiffusionUrl,
+  imaginairyUrl,
+} from '../../constants/endpoints-constants.js';
 
 // seed args:
 // character: [512, 512, 64, 128, 1, 256]
@@ -15,14 +18,29 @@ import {stableDiffusionUrl} from '../../constants/endpoints-constants.js';
 
 export const generateImage = ({
   modelName,
-  suffix,
+  // suffix,
   seed,
 }) => async description => {
   if (!seed) {
-    const s = `${description}, ${suffix}`;
-    const u = `${stableDiffusionUrl}/image?s=${encodeURIComponent(s)}${modelName ? `&model=${modelName}` : ''}`;
-    console.log('generate image url 1', {u});
-    const res = await fetch(u);
+    // const s = `${description}, ${suffix}`;
+    const s = description;
+    // const u = `${imaginairyUrl}/imagine?s=${encodeURIComponent(s)}${modelName ? `&model=${modelName}` : ''}`;
+    // console.log('generate image url 1', {
+    //   imaginairyUrl,
+    //   u,
+    //   modelName,
+    //   description,
+    //   // suffix,
+    // });
+
+    const fd = new FormData();
+    fd.append('prompt_texts', s);
+
+    // console.log('prompt', imaginairyUrl);
+    const res = await fetch(`${imaginairyUrl}/imagine`, {
+      method: 'POST',
+      body: fd,
+    });
     // console.log('generate image url 2', {u, status: res.status});
     if (res.ok) {
       const arrayBuffer = await res.arrayBuffer();
